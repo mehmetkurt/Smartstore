@@ -1,0 +1,52 @@
+@model ConfigurationModel
+<form asp-action="Configure">
+    <div asp-validation-summary="All"></div>
+    <div class="adminContent">
+        <div class="adminRow">
+            <div class="adminTitle">
+                <smart-label asp-for="PrivateKey" />
+            </div>
+            <div class="adminData">
+                <setting-editor asp-for="PrivateKey"></setting-editor>
+                <span asp-validation-for="PrivateKey"></span>
+            </div>
+        </div>
+        <div class="adminRow">
+            <div class="adminTitle">
+                <smart-label asp-for="SecretKey" />
+            </div>
+            <div class="adminData">
+                <setting-editor asp-for="SecretKey"></setting-editor>
+                <span asp-validation-for="SecretKey"></span>
+            </div>
+        </div>
+        <div class="adminRow">
+            <div class="adminTitle">
+                <smart-label asp-for="IsTestMode" />
+            </div>
+            <div class="adminData">
+                <setting-editor asp-for="IsTestMode" data-toggler-for=".testurl, .produrl"></setting-editor>
+                <span asp-validation-for="IsTestMode"></span>
+            </div>
+        </div>
+        <div class="adminRow testurl">
+            <div class="adminTitle">
+                <smart-label asp-for="TestUrl" />
+            </div>
+            <div class="adminData">
+                <setting-editor asp-for="TestUrl"></setting-editor>
+                <span asp-validation-for="TestUrl"></span>
+            </div>
+        </div>
+        <div class="adminRow produrl" data-panel-reverse="true">
+            <div class="adminTitle">
+                <smart-label asp-for="ProductionUrl" />
+            </div>
+            <div class="adminData">
+                <setting-editor asp-for="ProductionUrl"></setting-editor>
+                <span asp-validation-for="ProductionUrl"></span>
+            </div>
+        </div>
+
+    </div>
+</form>

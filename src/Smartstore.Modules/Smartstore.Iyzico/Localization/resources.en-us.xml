@@ -1,0 +1,268 @@
+﻿<Language Name="English" IsDefault="false" IsRightToLeft="false">
+    <LocaleResource Name="Plugins.FriendlyName.Payments.Iyzico.OnlinePayment" AppendRootKey="false">
+        <Value>Iyzico (Online Payment)</Value>
+    </LocaleResource>
+    <LocaleResource Name="Plugins.PaymentInfo.Payments.Iyzico.OnlinePayment" AppendRootKey="false">
+        <Value>You can easily initiate and manage payment transactions by using the Online Payment process.</Value>
+    </LocaleResource>
+
+    <LocaleResource Name="Plugins.Smartstore.Iyzico.Admin" AppendRootKey="false">
+        <Children>
+            <LocaleResource Name="Configuration" AppendRootKey="false">
+                <Children>
+                    <LocaleResource Name="Instruction" AppendRootKey="false">
+                        <Value>
+                            <![CDATA[
+                                <p>At iyzico, we understand the importance of a seamless payment experience in the fintech industry. To ensure the reliability and accuracy of your payment integration, we offer both Live and Sandbox environments.</p>
+                                <p>While Live environment allows you to process real transactions, ensuring that your customers' payments are securely processed and funds are transferred smoothly. </p>
+                                <p>On the other hand, our Sandbox environment provides a safe and controlled testing environment. It mimics the behavior of the Live environment, allowing you to simulate transactions and test your payment flows without affecting real transactions or funds.</p>
+                                <h5>Endpoints</h5>
+                                <p>Our ENVs are exactly same regarding architecture.</p>
+                                <p>The only difference between our LIVE and Sandbox ENVs is URL paths on your API call.</p>
+                                <p><strong>Test Url : </strong> https://sandbox-api.iyzipay.com</p>
+                                <p><strong>Production Url : </strong> https://api.iyzipay.com</p>
+                            ]]>
+                        </Value>
+                    </LocaleResource>
+
+                    <LocaleResource Name="Security" AppendRootKey="false">
+                        <Children>
+                            <LocaleResource Name="TabTitle" AppendRootKey="false">
+                                <Value>Security</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="OrderLimitation" AppendRootKey="false">
+                        <Children>
+                            <LocaleResource Name="TabTitle" AppendRootKey="false">
+                                <Value>Order Limitation</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>
+
+    <LocaleResource Name="Plugins.Payments.Iyzico.OnlinePayment" AppendRootKey="false">
+        <Children>
+            <LocaleResource Name="CardholderName">
+                <Value>Card Holder</Value>
+                <Children>
+                    <LocaleResource Name="NotEmpty">
+                        <Value>You cannot leave the cardholder's name blank!</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Hint">
+                        <Value>Write the name and surname written on the card.</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="CardNumber">
+                <Value>Card Number</Value>
+                <Children>
+                    <LocaleResource Name="NotEmpty">
+                        <Value>You cannot leave the card number blank!</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Hint">
+                        <Value>Write the card number on the front of the card.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Wrong">
+                        <Value>You have entered an invalid credit card number!</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="ExpirationDate">
+                <Value>Expiration Date</Value>
+                <Children>
+                    <LocaleResource Name="NotEmpty">
+                        <Value>You cannot skip the expiration date!</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Hint">
+                        <Value>Enter the expiration date found on your card as 4 digits, month and year. Ex: 01/24</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="CardCode">
+                <Value>Cvv</Value>
+                <Children>
+                    <LocaleResource Name="NotEmpty">
+                        <Value>You cannot leave the card code (cvv) blank!</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Wrong">
+                        <Value>
+                            The card code (cvv) should be 3 or 4 digits.!
+                        </Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Hint">
+                        <Value>Enter the security code for your card. It is usually 3 digits. Some cards may have 4 digits.</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+            <LocaleResource Name="Installment">
+                <Children>
+                    <LocaleResource Name="Loading">
+                        <Value>
+                            <![CDATA[
+                                When installment options are loading.<br />Please wait.It will only take a moment!
+                            ]]>
+                        </Value>
+                    </LocaleResource>
+                    <LocaleResource Name="GreaterThanOrEqualToZero">
+                        <Value>
+                            The installment option is not selected!
+                        </Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Table">
+                        <Children>
+                            <LocaleResource Name="Number">
+                                <Value>Installment</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Monthly">
+                                <Value>Monthly</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Total">
+                                <Value>Total</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>
+
+    <LocaleResource Name="Plugins.Payments.Iyzico" AppendRootKey="false">
+        <Children>
+            <LocaleResource Name="TestMode">
+                <Children>
+                    <LocaleResource Name="Description">
+                        <Value>
+                            <![CDATA[
+                                <p>
+                                    <strong class="mb-1 d-block">Important Notice!</strong>
+                                </p>
+                                
+                                <p>
+                                    Test mode is currently active. You can only make payments with test cards. To access test cards, click <a href="https://docs.iyzico.com/v/en/add-ons/test-cards" target="_blank">here</a>.
+                                </p>
+                                
+                                <p>
+                                    <ul>
+                                        <li><span>Credit (Master Card) </span> : 5311570000000005</li>
+                                        <li><span>Debit (Visa) </span> : 4987490000000002</li>
+                                    </ul>
+                                </p>
+                            ]]>
+                        </Value>
+                    </LocaleResource>
+                </Children>
+
+            </LocaleResource>
+            <LocaleResource Name="ErrorCodes">
+                <Children>
+                    <LocaleResource Name="NOT_SUFFICIENT_FUNDS">
+                        <Value>Insufficient funds</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="DO_NOT_HONOUR">
+                        <Value>Operation not approved.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_TRANSACTION">
+                        <Value>Invalid transaction</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="LOST_CARD">
+                        <Value>Lost card</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="STOLEN_CARD">
+                        <Value>Stolen card.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="EXPIRED_CARD">
+                        <Value>Expired card.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_CVC2">
+                        <Value>Invalid CVC2.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="NOT_PERMITTED_TO_CARDHOLDER">
+                        <Value>Operation not permitted to card holder.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="NOT_PERMITTED_TO_TERMINAL">
+                        <Value>Operation not permitted to terminal.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="FRAUD_SUSPECT">
+                        <Value>Fraud suspect.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="PICKUP_CARD">
+                        <Value>Pickup card.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="CARD_NOT_PERMITTED">
+                        <Value>Operation not permitted by card.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="UNKNOWN">
+                        <Value>An error occurred while processing payment.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_CVC2_LENGTH">
+                        <Value>Invalid CVC length.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="REFER_TO_CARD_ISSUER">
+                        <Value>Need to receive approval by bank.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_MERCHANT_OR_SP">
+                        <Value>Invalid bank merchant category.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BLOCKED_CARD">
+                        <Value>Blocked card.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_CAVV">
+                        <Value>Invalid CAVV.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_ECI">
+                        <Value>Invalid ECI.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="BIN_NOT_FOUND">
+                        <Value>Bin is not found.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="COMMUNICATION_OR_SYSTEM_ERROR">
+                        <Value>Communication or system error.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_CARD_NUMBER">
+                        <Value>Invalid card number.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="NO_SUCH_ISSUER">
+                        <Value>Issuer not found.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="DEBIT_CARDS_REQUIRES_3DS">
+                        <Value>Debit cards require 3D-Secure.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="REQUEST_TIMEOUT">
+                        <Value>Request timeout.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="NOT_PERMITTED_TO_INSTALLMENT">
+                        <Value>Installment option not allowed for the terminal.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="REQUIRES_DAY_END">
+                        <Value>Requires day end.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="RESTRICTED_CARD">
+                        <Value>Restricted card.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="EXCEEDS_ALLOWABLE_PIN_TRIES">
+                        <Value>Max PIN tries exceeded.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_PIN">
+                        <Value>Invalid PIN.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="ISSUER_OR_SWITCH_INOPERATIVE">
+                        <Value>Bank or terminal is not processing operation.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_EXPIRE_YEAR_MONTH">
+                        <Value>Expiration year or month is invalid.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="INVALID_AMOUNT">
+                        <Value>Invalid amount.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="REFUND_NOT_ALLOWED_FOR_THIS_DEBIT_CARD">
+                        <Value>Refund not allowed for this debit card.</Value>
+                    </LocaleResource>
+                </Children>
+            </LocaleResource>
+        </Children>
+    </LocaleResource>
+</Language>

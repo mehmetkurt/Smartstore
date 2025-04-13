@@ -1,0 +1,84 @@
+﻿@model OnlinePaymentInfoModel
+<input type="hidden" name="IyzicoPaymentMethodType" value="Online" />
+
+<div class="iyzico-payment online">
+    <div sm-if="!Model.TestMode" class="alert alert-warning">
+        @Html.Raw(T("Plugins.Payments.Iyzico.TestMode.Description").ToHtmlString())
+    </div>
+    <div class="opt-form">
+        <div class="row">
+            <div class="col-12 col-xl-6 card-container">
+                <div class="form-group row">
+                    <div class="col-12">
+                        <smart-label asp-for="CardholderName" class="mr-2"></smart-label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="CardholderName" />
+                        <span asp-validation-for="CardholderName"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12">
+                        <smart-label asp-for="CardNumber" class="mr-2"></smart-label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="CardNumber" />
+                        <span asp-validation-for="CardNumber"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <smart-label asp-for="ExpirationDate" class="mr-2"></smart-label>
+                            </div>
+                            <div class="col-12">
+                                <input asp-for="ExpirationDate" />
+                                <span asp-validation-for="ExpirationDate"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <smart-label asp-for="CardCode" class="mr-2"></smart-label>
+                            </div>
+                            <div class="col-12">
+                                <input asp-for="CardCode" />
+                                <span asp-validation-for="CardCode"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-6">
+               <partial name="_Installments" model="Model" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script data-origin="iyzico-online-payment" src="~/Modules/Smartstore.Iyzico/lib/inputmask/jquery.inputmask.js"></script>
+<script data-origin="iyzico-online-payment" src="~/Modules/Smartstore.Iyzico/lib/inputmask/bindings/inputmask.binding.js"></script>
+<script data-origin="iyzico-online-payment" src="~/Modules/Smartstore.Iyzico/js/smartstore.iyzico.js"></script>
+
+<script data-origin="iyzico-online-payment">
+    $(function () {
+        $(".iyzico-payment.online").iyzico({
+            installmentCallbackUrl: '@Url.Action("GetInstallments", "Iyzico")',
+            installmentTable: ".iyzico-installment-table",
+            formContainer: '.card-container',
+            formInputs  : {
+                cardNumber      : '#@Html.IdFor(m=>m.CardNumber)',
+                expirationDate  : '#@Html.IdFor(m=>m.ExpirationDate)',
+                cardCode        : '#@Html.IdFor(m=>m.CardCode)',
+                cardholderName  : '#@Html.IdFor(m=>m.CardholderName)',
+                creditCardType  : '#@Html.IdFor(m=>m.CreditCardType)'
+            },
+            messages: {
+                creditCardNotValid: '@T("Plugins.Payments.Iyzico.OnlinePayment.CardNumber.Wrong")',
+                installmentsLoading: '@Html.Raw(T("Plugins.Payments.Iyzico.OnlinePayment.Installment.Loading"))'
+            }
+        });
+    })
+</script>

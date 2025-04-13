@@ -46,15 +46,65 @@
 	
 	<ItemGroup>
 		<Compile Remove="App_Data\**; Modules\**; Themes\**" />
+		<Compile Remove="Themes\Flex - Copy\**" />
+		<Compile Remove="Themes\Orfarm\Views\Shared\NewFolder\**" />
 		<Content Remove="App_Data\**; Modules\**; Themes\**" />
+		<Content Remove="Themes\Flex - Copy\**" />
+		<Content Remove="Themes\Orfarm\Views\Shared\NewFolder\**" />
 		<EmbeddedResource Remove="App_Data\**; Modules\**; Themes\**" />
+		<EmbeddedResource Remove="Themes\Flex - Copy\**" />
+		<EmbeddedResource Remove="Themes\Orfarm\Views\Shared\NewFolder\**" />
 		<None Remove="App_Data\**; Modules\**; Themes\**" />
+		<None Remove="Themes\Flex - Copy\**" />
+		<None Remove="Themes\Orfarm\Views\Shared\NewFolder\**" />
 	</ItemGroup>
 	
 	<!-- Copy publishable files in App_Data directory -->
 	<ItemGroup>
 		<None Include="App_Data\icons.json" CopyToPublishDirectory="PreserveNewest" />
 		<None Include="App_Data\widgetzones.json" CopyToPublishDirectory="PreserveNewest" />
+		<None Include="Themes\Orfarm\theme.config" />
+		<None Include="Themes\Orfarm\Views\Shared\ConfigureTheme.cshtml" />
+		<None Include="Themes\Orfarm\Views\Shared\EmailTemplates\address.liquid" />
+		<None Include="Themes\Orfarm\Views\Shared\EmailTemplates\footer.liquid" />
+		<None Include="Themes\Orfarm\Views\Shared\EmailTemplates\header.liquid" />
+		<None Include="Themes\Orfarm\Views\Shared\EmailTemplates\master.liquid" />
+		<None Include="Themes\Orfarm\Views\Shared\EmailTemplates\order.liquid" />
+		<None Include="Themes\Orfarm\Views\Shared\EmailTemplates\shipment.liquid" />
+		<None Include="Themes\Orfarm\Views\Shared\Layouts\_Document.cshtml" />
+		<None Include="Themes\Orfarm\Views\_ViewImports.cshtml" />
+		<None Include="Themes\Orfarm\Views\_ViewStart.cshtml" />
+		<None Include="Themes\Orfarm\wwwroot\references.scss" />
+		<None Include="Themes\Orfarm\wwwroot\theme-rtl.scss" />
+		<None Include="Themes\Orfarm\wwwroot\theme.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_accordion.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_artlist.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_block.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_buttons.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_cart.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_checkout.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_cookie-manager.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_custom.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_fonts.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_footer.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_gallery.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_layout.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_login.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_megamenu.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_menu.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_misc.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_offcanvas.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_print.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_product.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_rating.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_rtl.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_search.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_shopbar.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_user.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_variables-configured.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_variables-custom.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_variables-reset.scss" />
+		<None Include="Themes\Orfarm\wwwroot\_variables.scss" />
 		<None Include="App_Data\EmailTemplates\**" CopyToPublishDirectory="PreserveNewest" />
 		<None Include="App_Data\Geo\**" CopyToPublishDirectory="PreserveNewest" />
 		<None Include="App_Data\Localization\**" CopyToPublishDirectory="PreserveNewest" />
@@ -64,6 +114,13 @@
 	<!-- Copy publishable files in Areas directory -->
 	<ItemGroup>
 		<Content Include="Areas\Admin\sitemap.xml" CopyToPublishDirectory="PreserveNewest" />
+		<Content Include="Themes\Orfarm\wwwroot\images\grippy.png" />
+		<Content Include="Themes\Orfarm\wwwroot\images\loading.gif" />
+		<Content Include="Themes\Orfarm\wwwroot\images\preview.png" />
+		<Content Include="Themes\Orfarm\wwwroot\images\star-off-12.png" />
+		<Content Include="Themes\Orfarm\wwwroot\images\star-off.png" />
+		<Content Include="Themes\Orfarm\wwwroot\images\star-on-12.png" />
+		<Content Include="Themes\Orfarm\wwwroot\images\star-on.png" />
 		<None Include="Areas\Admin\Views\**\*.cshtml" CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
 

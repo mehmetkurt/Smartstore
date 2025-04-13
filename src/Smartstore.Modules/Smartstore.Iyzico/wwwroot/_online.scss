@@ -1,0 +1,21 @@
+.iyzico-payment {
+    &.online {
+        .iyzico-installment-table {
+            width: 100%;
+            table-layout: fixed;
+
+            th, td {
+                &:nth-child(-n+2) {
+                    width: auto;
+                    text-align: center;
+                }
+            }
+
+            tbody {
+                tr {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

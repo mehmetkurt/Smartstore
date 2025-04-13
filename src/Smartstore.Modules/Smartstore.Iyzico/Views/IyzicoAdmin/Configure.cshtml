@@ -1,0 +1,35 @@
+@model ConfigurationModel
+
+@{
+    Layout = "_ConfigureModule";
+}
+
+@await Component.InvokeAsync("StoreScope")
+
+<widget target-zone="admin_button_toolbar_before">
+    <button id="SaveConfigButton" type="submit" name="save" class="btn btn-warning" value="save">
+        <i class="fa fa-check"></i>
+        <span>@T("Admin.Common.Save")</span>
+    </button>
+</widget>
+<div class="plugin-configuration justify-content-center">
+    <div class="flex-fill">
+        <div class="alert alert-info">
+            @Html.Raw(@T("Plugins.Smartstore.Iyzico.Admin.Configuration.Instruction"))
+        </div>
+    </div>
+    <div class="flex-fill">
+        <a href="http://www.codeislife.com.tr/smartstore/iyzico/" rel="nofollow" target="_blank" class="d-block">
+            <img src="@Url.Content("~/Modules/Smartstore.Iyzico/pay_with_iyzico.svg")" alt="Pay With Iyzico" class="vw-100"/>
+        </a>
+    </div>
+</div>
+
+<tabstrip id="iyzico-config" sm-nav-style="Material" sm-nav-position="Top">
+    <tab sm-title="@T("Plugins.Smartstore.Iyzico.Admin.Configuration.Security.TabTitle")" sm-selected="true">
+        <partial name="_Security" model="Model" />
+    </tab>
+    <tab sm-title="@T("Plugins.Smartstore.Iyzico.Admin.Configuration.OrderLimitation.TabTitle")">
+        <partial name="_OrderLimitations" model="Model" />
+    </tab>
+</tabstrip>
