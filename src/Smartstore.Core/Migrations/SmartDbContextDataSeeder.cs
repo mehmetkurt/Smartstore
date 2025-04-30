@@ -267,20 +267,24 @@ Wenn diese Option aktiviert ist, werden neue Gäste unter diesen Umständen blocki
 
             builder.AddOrUpdate("Tax.LegalInfoShort3", "Prices {0}, {1}", "Preise {0}, {1}");
 
-            builder.AddOrUpdate("Smartstore.AI.Prompts.Role.ImageAnalyzerAssistant",
-                "Be an image analyzer assistant.",
-                "Sei ein Assistent für Bildanalyse.");
-
             builder.AddOrUpdate("Smartstore.AI.Prompts.PleaseContinue",
                 "Continue exactly at the marked point without repeating the previous text.",
                 "Fahre genau an der markierten Stelle fort, ohne den bisherigen Text zu wiederholen.");
 
             builder.AddOrUpdate("Smartstore.AI.Prompts.ContinueHere", "[Continue here]", "[Fortsetzung hier]");
 
-            builder.AddOrUpdate("Smartstore.AI.Prompts.Suggestions.GeneralPrompt",
-                "Separate the suggestions with the ¶ character (paragraph mark). Do not use numbering. Do not repeat suggestions.",
-                "Trenne die Vorschläge durch das ¶ Zeichen (Absatzmarke). Verwende keine Nummerierungen. Wiederhole keine Vorschläge.");
-            
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Suggestions.Separation",
+                "Separate the suggestions with the ¶ character (paragraph mark).",
+                "Trenne die Vorschläge durch das ¶ Zeichen (Absatzmarke).");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Suggestions.NoNumbering",
+                "Do not use numbering.",
+                "Verwende keine Nummerierungen.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Suggestions.NoRepitions",
+                "Each proposal must be unique - repetitions are not permitted.",
+                "Jeder Vorschlag muss einzigartig sein – Wiederholungen sind nicht erlaubt.");
+
             builder.AddOrUpdate("Smartstore.AI.Prompts.Suggestions.CharLimit",
                 "Each suggestion should have a maximum of {0} characters.",
                 "Jeder Vorschlag soll maximal {0} Zeichen haben.");
@@ -299,7 +303,7 @@ Wenn diese Option aktiviert ist, werden neue Gäste unter diesen Umständen blocki
 
             builder.AddOrUpdate("Smartstore.AI.Prompts.DontUseQuotes",
                 "Do not enclose the text in quotation marks or other characters.",
-                "Der Text darf nicht in Anführungszeichen oder andere Zeichen eingeschlossen werden.");
+                "Schließe den Text nicht in Anführungszeichen oder andere Zeichen ein.");
 
             builder.AddOrUpdate("Admin.Orders.CompleteUnpaidOrder",
                 "The order has a payment status of <strong>{0}</strong>. Do you still want to set it to complete?",
@@ -340,16 +344,21 @@ Wenn diese Option aktiviert ist, werden neue Gäste unter diesen Umständen blocki
 
             builder.AddOrUpdate("Admin.AI.EditHtml", "Edit HTML text", "HTML-Text bearbeiten");
 
-            builder.AddOrUpdate("Smartstore.AI.Prompts.Role.Rules", "Follow these guidelines:", "Beachte dabei die folgenden Regeln:");
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Role.Rules",
+                "You must strictly follow these rules:",
+                "Diese Regeln sind zwingend einzuhalten:");
 
             builder.AddOrUpdate("Smartstore.AI.Prompts.Role.HtmlEditor",
-                "You are an intelligent AI editor for web content. You combine the skills of a professional copywriter and technical HTML editor. You always create valid HTML!",
+                "You are an intelligent AI editor for web content. You combine the skills of a professional copywriter and technical HTML editor. Your output must ALWAYS be valid HTML!",
                 "Du bist ein intelligenter KI-Editor für Webinhalte. Du kombinierst die Fähigkeiten eines professionellen Texters und technischen HTML-Editors. Deine Ausgabe ist IMMER valides HTML!");
 
-            // TODO: Maybe split this instruction??? in JustPureHtml and DontUseMarkdown
-            builder.AddOrUpdate("Smartstore.AI.Prompts.DontUseMarkdownHtml",
-                "Only return pure HTML code - do not use Markdown formatting, no backticks (```) and no indented code sections.",
-                "Gib ausschließlich reinen HTML-Code zurück – verwende keine Markdown-Formatierung, keine Backticks (```) und keine eingerückten Codeabschnitte.");
+            builder.AddOrUpdate("Smartstore.AI.Prompts.CreateHtml",
+                "Return only pure HTML code",
+                "Gib ausschließlich reinen HTML-Code zurück");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.DontUseMarkdown",
+                "Do not use Markdown formatting, no backticks (```) and no indented code sections.",
+                "Verwende keine Markdown-Formatierung, keine Backticks (```) und keine eingerückten Codeabschnitte.");
 
             builder.AddOrUpdate("Smartstore.AI.Prompts.CaretPos",
                 "The placeholder [CARETPOS] marks the position where your new text should appear.",
@@ -446,6 +455,10 @@ Wenn diese Option aktiviert ist, werden neue Gäste unter diesen Umständen blocki
                 "Do not create a heading that contains the product name.",
                 "Erstelle keine Überschrift, die den Produktnamen enthält.");
 
+            builder.AddOrUpdate("Smartstore.AI.Prompts.DontCreateTitle",
+                "Do not create the title: '{0}'.",
+                "Erstelle nicht den Titel: '{0}'.");
+
             builder.AddOrUpdate("Smartstore.AI.Prompts.WriteCompleteParagraphs",
                 "Create a complete and coherent text for each section.",
                 "Erstelle für jeden Abschnitt einen inhaltlich vollständigen und zusammenhängenden Text.");
@@ -481,6 +494,9 @@ Wenn diese Option aktiviert ist, werden neue Gäste unter diesen Umständen blocki
             builder.AddOrUpdate("Smartstore.AI.Prompts.Role.ProductExpert",
                 "Be an expert for the product: '{0}'.",
                 "Du bist ein Experte für das Produkt: '{0}'.");
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Role.ImageAnalyzer",
+                "Be an image analyzer assistant.",
+                "Du bist ein Assistent für Bildanalyse.");
 
             // We change this resource to be a pure user message her. The main instruction of this order was shifted to the role description.
             // INFO: Not only is this the preferred method for engineering prompts, but it also reduces the custom prompt message to a minimum.
@@ -499,6 +515,120 @@ Wenn diese Option aktiviert ist, werden neue Gäste unter diesen Umständen blocki
             builder.AddOrUpdate("Smartstore.AI.Prompts.ParagraphHeadingTag",
                 "Use {0} tags for the paragraph headings.",
                 "Nutze für die Überschriften der Abschnitte {0}-Tags.");
+
+            builder.AddOrUpdate("Admin.Configuration.Settings.GeneralCommon.XmlSitemapIncludesAlternateLinks",
+                "Add alternate links for localized pages",
+                "Alternate Links für lokalisierte Seiten hinzufügen",
+                "Specifies whether to add alternate links (xhtml:link) for localized page versions to the XML Sitemap.",
+                "Legt fest, ob Alternate Links (xhtml:link) für lokalisierte Seitenversionen in der XML-Sitemap hinzugefügt werden sollen.");
+
+            builder.AddOrUpdate("Admin.Configuration.Settings.GeneralCommon.AddAlternateHtmlLinks",
+                "Add alternate links for localized pages",
+                "Alternate Links für lokalisierte Seiten hinzufügen",
+                "Specifies whether to add alternate links (link rel='alternate') for localized page versions in the HTML header.",
+                "Legt fest, ob Alternate Links (link rel='alternate') für lokalisierte Seitenversionen in den HTML-Header eingefügt werden sollen.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.ImageAnalyzer.ObjectDefinition",
+                "Return exactly one single JSON object with these keys and meanings:",
+                "Gib genau ein einzelnes JSON-Objekt mit diesen Keys und Bedeutungen zurück:");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.ImageAnalyzer.ObjectDefinition.Title",
+                "'title': short, precise description of the image content for the HTML title attribute (max. 60 characters)",
+                "'title': kurze, präzise Beschreibung des Bildinhalts für das HTML-title-Attribut (max. 60 Zeichen)");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.ImageAnalyzer.ObjectDefinition.Alt",
+                "'alt': clearly legible description of the image content for the HTML alt attribute",
+                "'alt': klar lesbare Beschreibung des Bildinhalts für das HTML-alt-Attribut");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.ImageAnalyzer.ObjectDefinition.Tags",
+                "'tags': exactly 5 thematically matching terms, as a comma-separated list",
+                "'tags': exakt 5 thematisch passende Begriffe, als kommagetrennte Liste");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.ImageAnalyzer.NoContent",
+                "Set the value 'no-content' in every field for which no meaningful content can be determined.",
+                "Setze den Wert 'no-content' in jedem Feld, für das kein sinnvoller Inhalt ermittelt werden kann.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.CreateJson",
+                "Only return a single JSON object - without formatting, meta comments or additional text.",
+                "Gib ausschließlich ein einziges JSON-Objekt zurück – ohne Formatierungen, Meta-Kommentare oder zusätzlichen Text.");
+
+            builder.Delete("Smartstore.AI.Prompts.JustHtml");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.TranslateTextContentOnly",
+                "Translate text content between HTML tags as well as plain text without HTML structure.",
+                "Übersetze Textinhalte zwischen HTML-Tags sowie reinen Fließtext ohne HTML-Struktur.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.PreserveHtmlStructure",
+                "Do not alter any HTML tags. Do not add, remove, or restructure tags in any way.",
+                "Verändere keine HTML-Tags. Füge keine Tags hinzu, entferne keine und ändere keine Verschachtelung.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.IgnoreTechnicalAttributes",
+                "Do not translate attribute values that serve technical purposes, such as href, src, id, class, style, or data-*.",
+                "Übersetze keine Attributwerte, die technische Funktionen erfüllen, z.B.: 'href, src, id, class, style, data-*'.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.KeepHtmlEntitiesIntact",
+                "Do not modify HTML entities (e.g., &nbsp;, &copy;, &ndash;) in meaning or form.",
+                "Verändere HTML-Entities (z.B. &nbsp;, &copy;, &ndash;) nicht – weder semantisch noch formal.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.TranslateWithContext",
+                "When translating text within inline tags (e.g., <strong>, <em>, <span>, <a>, …), always preserve the full sentence context.",
+                "Berücksichtige beim Übersetzen von Textteilen in Inline-Tags (z.B. <strong>, <em>, <span>, <a>, …) immer den vollständigen Satzkontext.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.TranslateDescriptiveAttributes",
+                "Translate attribute values that convey information to the reader, such as alt and title.",
+                "Übersetze Attributwerte, die dem Leser Informationen vermitteln, z.B. alt und title.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.PreserveToneAndStyle",
+                "Preserve the tone and style of the original text. Do not simplify, paraphrase, or smooth the language.",
+                "Behalte den Tonfall und Stil des Ausgangstexts bei. Verwende keine stilistischen Glättungen, Umschreibungen oder Vereinfachungen.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.SkipAlreadyTranslated",
+                "If the text is already in the target language, return it unchanged.",
+                "Wenn der Text bereits in der Zielsprache vorliegt, gib ihn unverändert zurück.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Translator.NoMetaComments",
+                "Do not add explanations or meta comments (e.g., 'The text is already in English.').",
+                "Füge keine Erklärungen oder Meta-Kommentare hinzu (z.B. 'Der Text ist schon Englisch.').");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.Product.NoAssumptions",
+                "Only describe what is clearly known about the product. Do not make any assumptions about the product.",
+                "Beschreibe nur, was von dem Produkt eindeutig bekannt ist. Stelle keine Vermutungen über das Produkt an.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.OneParagraph",
+                "The text contains only one section, which is enclosed by a p-tag.",
+                "Der Text beinhaltet nur einen Abschnitt, der von einem p-Tag umschlossen ist.");
+
+            builder.AddOrUpdate("Admin.Customers.DeleteCustomer", "Delete customer", "Kunde löschen");
+
+            builder.Delete("Account.PasswordRecovery.EmailNotFound");
+
+            builder.AddOrUpdate("Account.PasswordRecovery.EmailHasBeenSent",
+                "We have sent you an email with further instructions if an account exists with your email address.",
+                "Wir haben Ihnen eine E-Mail mit weiteren Anweisungen geschickt, falls ein Konto mit Ihrer E-Mail-Adresse existiert.");
+
+            builder.AddOrUpdate("Admin.DataExchange.Import.UpdateAllKeyFieldMatches",
+                "Update all that match a key field value",
+                "Alle aktualisieren, die dem Wert eines Schlüsselfelds entsprechen",
+                "Specifies that all records matching the value of a key field are updated. By default, only the first matching record is updated." +
+                " Enable this option if, for example, you have assigned an MPN multiple times and want to update all products with that MPN in a consistent manner." +
+                " Enabling this option may reduce the performance of the import.",
+                "Legt fest, dass alle mit dem Wert eines Schlüsselfeldes übereinstimmenden Datensätze aktualisiert werden. Standardmäßig wird nur der erste übereinstimmende" +
+                " Datensatz aktualisiert. Aktivieren Sie diese Option, wenn Sie z.B. eine MPN mehrfach vergeben haben und alle Produkte mit dieser MPN einheitlich aktualisieren möchten." +
+                " Die Aktivierung dieser Option kann die Performance des Imports beeinträchtigen.");
+
+            // Fix:
+            builder.AddOrUpdate("Admin.DataExchange.Import.KeyFieldNames.Note")
+                .Value("de", "Bitte verwenden Sie das Feld ID nur dann als Schlüsselfeld, wenn die Daten aus derselben Datenbank stammen, in die sie importiert werden sollen. Andernfalls können falsche Datensätze aktualisiert werden.");
+
+            builder.AddOrUpdate("Admin.Configuration.Settings.Shipping.UseShippingOriginIfShippingAddressMissing",
+                "Shipping origin determines shipping costs if shipping address is missing",
+                "Artikelstandort bestimmt Versandkosten bei fehlender Versandanschrift",
+                "Specifies that if the customer has never checked out and the shipping address is unknown, the shipping cost from the location where the order was shipped (according to \"Shipping Origin\") will be used.",
+                "Legt fest, dass die Versandkosten des Ortes verwendet werden, von dem aus der Versand erfolgt (gemäß \"Versand erfolgt ab\"), sofern der Kunde den Checkout noch nie durchlaufen hat und seine Versandanschrift unbekannt ist.");
+
+            builder.AddOrUpdate("Smartstore.AI.Prompts.ReserveSpaceForShopName",
+                "When creating text for title tags, do not use the name of the website, as this will be added later - Reserve {0} characters for this.",
+                "Verwende bei der Erstellung von Texten für title-Tags nicht den Namen der Website, da dieser später hinzugefügt wird - Reserviere dafür {0} Zeichen.");
         }
     }
 }

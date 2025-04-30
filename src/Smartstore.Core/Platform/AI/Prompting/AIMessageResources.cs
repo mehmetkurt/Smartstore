@@ -9,6 +9,8 @@ namespace Smartstore.Core.AI.Prompting
     /// </summary>
     public partial class AIMessageResources(ILocalizationService localizationService)
     {
+        public static string PromptResourceRoot => "Smartstore.AI.Prompts.";
+
         private readonly ILocalizationService _localizationService = localizationService;
 
         /// <summary>
@@ -24,21 +26,30 @@ namespace Smartstore.Core.AI.Prompting
         /// Prevents the AI from generating markdown.
         /// </summary>
         /// <returns>
-        /// AI instruction: Do not use markdown formatting.
+        /// AI instruction: Do not use Markdown formatting, no backticks (```) and no indented code sections.
         /// </returns>
         public virtual string DontUseMarkdown()
             => P("DontUseMarkdown");
 
-        // TODO: Use a generic instruction for markdown and add one explicitly for HTML???
         /// <summary>
         /// Prevents the AI from generating markdown.
         /// </summary>
         /// <returns>
-        /// AI instruction: Gib ausschließlich reinen HTML-Code zurück – verwende keine Markdown-Formatierung, keine Backticks (```) und keine eingerückten Codeabschnitte.
+        /// AI instruction: Only return pure HTML code - do not use Markdown formatting, no backticks (```) and no indented code sections.
         /// </returns>
-        public virtual string DontUseMarkdownHtml()
-            => P("DontUseMarkdownHtml");
+        public virtual string CreatHtmlWithoutMarkdown()
+            => $"{CreateHtml()} - {DontUseMarkdown()}";
 
+        /// <summary>
+        /// Necessary for the AI to create the generated text as HTML.
+        /// </summary>
+        /// <param name="appendPeriod">Indicates whether a period should be added at the end of the sentence.</param>
+        /// <returns>
+        /// AI instruction: Only return pure HTML code(.)
+        /// </returns>
+        public virtual string CreateHtml(bool appendPeriod = false)
+            => P("CreateHtml") + (appendPeriod ? "." : "");
+        
         /// <summary>
         /// Instructs the AI to skip any introduction.
         /// </summary>
@@ -267,28 +278,6 @@ namespace Smartstore.Core.AI.Prompting
         public virtual string LanguageStyle(string style)
             => P("LanguageStyle", style);
 
-        // TODO: Obsolete?
-        /// <summary>
-        /// Necessary for the AI to create the generated text as HTML.
-        /// </summary>
-        /// <returns>
-        /// AI instruction: Create HTML text.
-        /// </returns>
-        public virtual string CreateHtml()
-            => P("CreateHtml");
-
-        // TODO: Obsolete?
-        /// <summary>
-        /// No introductions or explanations.
-        /// </summary>
-        /// <returns>
-        /// AI instruction: Just return the HTML you have created so that it can be integrated directly into a website. 
-        /// Don't give explanations about what you have created or introductions like: 'Gladly, here is your HTML'. 
-        /// Do not include the generated HTML in any delimiters like: '```html' 
-        /// </returns>
-        public virtual string JustHtml()
-            => P("JustHtml");
-
         /// <summary>
         /// Necessary so that the AI does not create an entire HTML document.
         /// </summary>
@@ -340,9 +329,13 @@ namespace Smartstore.Core.AI.Prompting
         /// <summary>
         /// Instruction to reserve space for the name of the website.
         /// </summary>
-        /// <returns>AI instruction: Do not use the name of the website as this will be added later. Reserve 5 words for this..</returns>
-        public virtual string ReserveSpaceForShopName()
-            => P("ReserveSpaceForShopName");
+        /// <param name="longestStoreNameLenth">The length of the logest store name.</param>
+        /// <returns>
+        ///     When creating text for title tags, do not use the name of the website, as this will be added later - 
+        ///     Reserve <paramref name="longestStoreNameLenth"/> characters for this.
+        /// </returns>
+        public virtual string ReserveSpaceForShopName(int longestStoreNameLenth)
+            => P("ReserveSpaceForShopName", longestStoreNameLenth.ToString());
 
         #region HTML Structure instructions
 
@@ -367,8 +360,10 @@ namespace Smartstore.Core.AI.Prompting
         /// <param name="paragraphCount">The count of paragraphs.</param>
         /// <returns>AI instruction: The text should be divided into <paramref name="paragraphCount"/> paragraphs, which are enclosed with p tags.</returns>
         public virtual string ParagraphCount(int paragraphCount)
-            => P("ParagraphCount", paragraphCount);
-
+        {
+            return paragraphCount > 1 ? P("ParagraphCount", paragraphCount) : P("OneParagraph");
+        }
+        
         /// <summary>
         /// Defines the number of words for each paragraph.
         /// </summary>
@@ -544,7 +539,7 @@ namespace Smartstore.Core.AI.Prompting
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private string P(string keyPart, params object[] args)
-            => GetResource("Smartstore.AI.Prompts." + keyPart, args);
+            => GetResource(PromptResourceRoot + keyPart, args);
 
         #endregion
     }
