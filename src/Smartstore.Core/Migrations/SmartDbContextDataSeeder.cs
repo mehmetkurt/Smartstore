@@ -108,6 +108,10 @@ namespace Smartstore.Core.Data.Migrations
             builder.AddOrUpdate("ReturnRequests.ItemsToReturn", 
                 "I would like to return the following items:", 
                 "Ich möchte die folgenden Artikel stornieren:");
+
+            builder.AddOrUpdate("Account.PasswordRecovery.EmailHasBeenSent",
+                "If there is an account associated with this email, we have sent a link to reset your password.",
+                "Falls ein Konto mit dieser E-Mail-Adresse verknüpft ist, haben wir Ihnen soeben Anweisungen zum Zurücksetzen Ihres Passworts zugeschickt.");
         }
     }
 }
