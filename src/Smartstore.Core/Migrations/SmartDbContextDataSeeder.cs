@@ -105,6 +105,9 @@ namespace Smartstore.Core.Data.Migrations
 
             builder.AddOrUpdate("ReturnRequests.ReturnAllItems", "All items", "Alle Artikel");
             builder.AddOrUpdate("ReturnRequests.ReturnSelectedItems", "Selected items", "Ausgewählte Artikel");
+            builder.AddOrUpdate("ReturnRequests.ItemsToReturn", 
+                "I would like to return the following items:", 
+                "Ich möchte die folgenden Artikel stornieren:");
         }
     }
 }

@@ -2,33 +2,48 @@
 
 @model ReturnRequestItemsModel
 
-<div class="form-check">
-    <input type="radio" asp-for="ReturnAllItems" id="ReturnAllItems" value="true" class="form-check-input" attr-disabled='(!Model.IsEditable, "disabled")'>
-    <label class="form-check-label" for="ReturnAllItems">
-        @T("ReturnRequests.ReturnAllItems")
-    </label>
-</div>
-<div class="form-check mt-2">
-    <input type="radio" asp-for="ReturnAllItems" id="ReturnSelectedItems" value="false" class="form-check-input" attr-disabled='(!Model.IsEditable, "disabled")'>
-    <label class="form-check-label" for="ReturnSelectedItems">
-        @T("ReturnRequests.ReturnSelectedItems")
-    </label>
-</div>
+@{
+    var returnAll = Model.ReturnAllItems;
+}
+
+@if (Model.IsEditable)
+{
+    <div class="form-check">
+        <input type="radio" asp-for="ReturnAllItems" id="ReturnAllItems" value="true" class="form-check-input">
+        <label class="form-check-label" for="ReturnAllItems">
+            @T("ReturnRequests.ReturnAllItems")
+        </label>
+    </div>
+    <div class="form-check mt-2">
+        <input type="radio" asp-for="ReturnAllItems" id="ReturnSelectedItems" value="false" class="form-check-input">
+        <label class="form-check-label" for="ReturnSelectedItems">
+            @T("ReturnRequests.ReturnSelectedItems")
+        </label>
+    </div>
+}
+else
+{
+    <div>
+        @T("ReturnRequests.ItemsToReturn")
+    </div>
+}
 
 <div id="cart-items" class="cart mt-2">
     <div class="cart-body">
         @foreach (var item in Model.Items)
         {
             var quantityId = $"orderitem-quantity{item.Id}";
-            <div class="cart-row">
+            <div class="cart-row return-item">
                 <div class="row">
                     @if (Model.IsEditable)
                     {
                         <div class="select-cart-item col-auto">
                             <input name="orderitem-select@(item.Id)"
                                    type="checkbox"
-                                   class="form-check-input select-cart-item-checkbox"
-                                   attr-checked='(item.Selected, "checked")' />
+                                   class="form-check-input select-cart-item-checkbox return-item-checkbox"
+                                   attr-checked='(returnAll || item.Selected, "checked")'
+                                   attr-aria-disabled='(returnAll, "true")'
+                                   attr-disabled='(returnAll, "disabled")' />
                         </div>
                     }
                     <div class="cart-item-img col-2" sm-if="item.Image != null && item.Image.HasImage()">
@@ -64,16 +79,24 @@
                             }
                             else if (item.MaxReturnQuantity > 0)
                             {
+                                var qtyDisabled = returnAll || (!returnAll && !item.Selected);
                                 <label for="@quantityId" class="mb-1">@T("ReturnRequests.Products.Quantity"):</label>
-                                <select id="@quantityId" name="@quantityId" class="form-control form-control-sm noskin" style="max-width: 120px">
+                                <select id="@quantityId" 
+                                        name="@quantityId" 
+                                        class="form-control form-control-sm return-item-quantity noskin" 
+                                        style="max-width: 120px;"
+                                        data-max-quantity="@item.MaxReturnQuantity"
+                                        attr-aria-disabled='(qtyDisabled, "true")'
+                                        attr-disabled='(qtyDisabled, "disabled")'>
                                     @for (var i = 0; i <= item.MaxReturnQuantity; i++)
                                     {
-                                        <option value="@(i)" attr-selected='(i == item.SelectedReturnQuantity, "selected")'>@(i)</option>
+                                        var selected = (returnAll && i == item.MaxReturnQuantity) || (!returnAll && i == item.SelectedReturnQuantity);
+                                        <option value="@(i)" attr-selected='(selected, "selected")'>@(i)</option>
                                     }
                                 </select>
                             }
 
-                            <div sm-if="item.ReturnRequests.Count > 0" class="alert alert-info small mt-2 mb-0" role="status" aria-live="polite">
+                            <div sm-if="Model.IsEditable && item.ReturnRequests.Count > 0" class="alert alert-info small mt-2 mb-0" role="status" aria-live="polite">
                                 <p>@T("ReturnRequests.Products.RequestAlreadyExists")</p>
                                 @foreach (var rr in item.ReturnRequests)
                                 {
@@ -97,9 +120,39 @@
     </div>
 </div>
 
+@if(!Model.IsEditable)
+{
+    return;
+}
 
 <script sm-target-zone="scripts" data-origin="return-request-items">
     $(function () {
-        // TODO: (mg) Handle UI state of controls in context of "Return all items" vs. "Return selected items"
+        $('input[name="@(Html.NameFor(x => x.ReturnAllItems))"]').on('change', (e) => {
+            const returnAll = toBool($(e.currentTarget).val());
+            const $elContainer = $('#cart-items');
+
+            $elContainer.find('.return-item-checkbox')
+                .prop('checked', returnAll)
+                .prop('disabled', returnAll)
+                .aria('disabled', returnAll);
+
+            $elContainer.find('.return-item-quantity')
+                .prop('disabled', true)
+                .aria('disabled', true)
+                .each((_, el) => {
+                    $(el).val(returnAll ? $(el).data('max-quantity') : 0);
+                });
+        });
+
+        $('.return-item-checkbox').on('change', (e) => {
+            const $el = $(e.currentTarget);
+            const $sel = $el.closest('.return-item').find('.return-item-quantity');
+            const selected = $el.is(':checked');
+
+            $sel.prop('disabled', !selected);
+            if (!selected) {
+                $sel.val(0);
+            }
+        });
     });
 </script>

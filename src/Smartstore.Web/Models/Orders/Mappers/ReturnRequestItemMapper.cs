@@ -18,9 +18,13 @@ namespace Smartstore.Web.Models.Orders;
 public static partial class ReturnRequestMappingExtensions
 {
     public static async Task<ReturnRequestItemsModel> MapAsync(this Order order,
+        bool isEditable = true,
+        bool returnAllItems = true,
         Dictionary<int, int> selectedQuantities = null)
     {
         dynamic parameters = new ExpandoObject();
+        parameters.IsEditable = isEditable;
+        parameters.ReturnAllItems = returnAllItems;
         parameters.SelectedQuantities = selectedQuantities;
 
         var model = new ReturnRequestItemsModel();
@@ -74,8 +78,10 @@ internal class ReturnRequestItemsMapper : IMapper<Order, ReturnRequestItemsModel
         Guard.NotNull(from.Customer?.ReturnRequests);
         Guard.NotNull(to);
 
-        var selectedQuantities = parameters?.SelectedQuantities as Dictionary<int, int>;
+        to.IsEditable = parameters?.IsEditable == true;
+        to.ReturnAllItems = parameters?.ReturnAllItems == true;
 
+        var selectedQuantities = parameters?.SelectedQuantities as Dictionary<int, int>;
         var language = _workContext.WorkingLanguage;
         var request = _httpContextAccessor.HttpContext?.Request;
         var form = request != null && request.IsPost() && request.HasFormContentType ? request.Form : null;
@@ -94,8 +100,6 @@ internal class ReturnRequestItemsMapper : IMapper<Order, ReturnRequestItemsModel
         {
             var selected = false;
             var selectedReturnQuantity = 0;
-            var productSeName = await oi.Product.GetActiveSlugAsync();
-            var returnRequests = allReturnRequests.TryGetValues(oi.Id, out var tmp) ? tmp.ToList() : [];
 
             if (selectedQuantities != null)
             {
@@ -110,6 +114,13 @@ internal class ReturnRequestItemsMapper : IMapper<Order, ReturnRequestItemsModel
                 selected = selectedReturnQuantity > 0 && form.TryGetValue($"orderitem-select{oi.Id}", out var selectedVal) && selectedVal.ToString().ToBool();
             }
 
+            if (!to.IsEditable && !selected)
+            {
+                continue;
+            }
+
+            var productSeName = await oi.Product.GetActiveSlugAsync();
+            var returnRequests = allReturnRequests.TryGetValues(oi.Id, out var tmp) ? tmp.ToList() : [];
             var item = new ReturnRequestItemsModel.ItemModel
             {
                 Id = oi.Id,
