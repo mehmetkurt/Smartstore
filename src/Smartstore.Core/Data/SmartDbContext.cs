@@ -1,12 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Autofac;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Smartstore.Core.Installation;
 using Smartstore.Data;
 using Smartstore.Data.Hooks;
 using Smartstore.Data.Migrations;
 using Smartstore.Data.Providers;
-using Smartstore.Threading;
 
 namespace Smartstore.Core.Data
 {
