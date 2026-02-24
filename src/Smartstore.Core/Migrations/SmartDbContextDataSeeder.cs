@@ -105,9 +105,13 @@ namespace Smartstore.Core.Data.Migrations
 
             builder.AddOrUpdate("ReturnRequests.ReturnAllItems", "All items", "Alle Artikel");
             builder.AddOrUpdate("ReturnRequests.ReturnSelectedItems", "Selected items", "Ausgewählte Artikel");
-            builder.AddOrUpdate("ReturnRequests.ItemsToReturn", 
-                "I would like to return the following items:", 
-                "Ich möchte die folgenden Artikel stornieren:");
+
+            builder.AddOrUpdate("ReturnRequests.WithdrawEntireOrder",
+                "I would like to withdraw the entire order:",
+                "Ich möchte die gesamte Bestellung stornieren:");
+            builder.AddOrUpdate("ReturnRequests.WithdrawItems",
+                "I would like to withdraw the following items:", 
+                "Ich möchte folgende Artikel stornieren:");
 
             builder.AddOrUpdate("Account.PasswordRecovery.EmailHasBeenSent",
                 "If there is an account associated with this email, we have sent a link to reset your password.",

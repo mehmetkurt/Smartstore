@@ -102,7 +102,7 @@ namespace Smartstore.Web.Controllers
                         quantity = form.TryGetValue($"orderitem-quantity{oi.Id}", out var qtyVal) ? qtyVal.ToString().ToInt() : 0;
                     }
 
-                    quantity = Math.Max(oi.Quantity - existingQuantity, 0);
+                    quantity = Math.Max(quantity - existingQuantity, 0);
                     if (quantity == 0)
                     {
                         return null;
@@ -155,7 +155,7 @@ namespace Smartstore.Web.Controllers
             Guard.NotNull(model);
 
             model.OrderId = order.Id;
-            model.Items = await order.MapAsync();
+            model.Items = await order.MapAsync(true, model.Items?.ReturnAllItems ?? true);
 
             string returnRequestReasons = _orderSettings.GetLocalizedSetting(x => x.ReturnRequestReasons, order.CustomerLanguageId, order.StoreId, true, false);
             string returnRequestActions = _orderSettings.GetLocalizedSetting(x => x.ReturnRequestActions, order.CustomerLanguageId, order.StoreId, true, false);
