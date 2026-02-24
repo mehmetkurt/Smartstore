@@ -56,10 +56,12 @@
             }
 
             const cmd = el.data('command');
-            const isSummernoteInlineEditing = el.closest(".html-editor-root").length !== 0;
-            const isRichText = tool.data('is-richtext') || (cmd === "generate" && isSummernoteInlineEditing);
+            const location = el.closest('.ai-dropdown-menu').data("location");
+            const isHtmlInlineEditing = location == "HtmlEditor";
+            const isRichText = toBool(tool.data('is-richtext')) && cmd === "generate";
 
             let params = {
+                location: location,
                 entityName: tool.data('entity-name'),
                 Type: tool.data('entity-type'),
                 targetProperty: tool.data('target-property'),
@@ -75,7 +77,7 @@
                 selectedElementType: tool.data('range-is-on')
             };
 
-            if (tool.closest(".note-dropdown-menu").length) {
+            if (isHtmlInlineEditing) {
                 params.origin = "summernote";
             }
 

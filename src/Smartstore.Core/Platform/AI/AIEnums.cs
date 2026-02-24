@@ -105,9 +105,9 @@
         ChatDialog,
 
         /// <summary>
-        /// The command is rendered in a readonly HTML input control.
+        /// The command is rendered in a readonly HTML input preview control.
         /// </summary>
-        HtmlInput,
+        HtmlPreview,
 
         /// <summary>
         /// The command is rendered as an HTML editor tool.

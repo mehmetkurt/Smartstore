@@ -26,26 +26,16 @@ namespace Smartstore.Web.Rendering
         TagBuilder? GenerateTranslationTool(ILocalizedModel model, string localizedEditorName);
 
         /// <summary>
-        /// Creates the icon button and the commands dropdown menu to open the simple text creation dialog.
+        /// Creates the button and the commands dropdown menu to open the text generation/optimize dialog.
         /// </summary>
         /// <param name="attributes">The attributes of the <see cref="TagHelper"/>.</param>
+        /// <param name="location">The tool location, e.g. simple textbox, HTML editor etc.</param>
         /// <param name="enabled">A value indicating whether to initially enable the command dropdown items (e.g. optimize, change-tone, etc.).</param>
         /// <returns>
         /// The icon button inclusive dropdown to choose a rewrite command from.
         /// <c>null</c> if there is no active <see cref="IAIProvider"/>.
         /// </returns>
-        TagBuilder? GenerateTextTool(AttributeDictionary? attributes, bool enabled = true);
-
-        /// <summary>
-        /// Creates the icon button and the commands dropdown menu to open the rich text creation dialog.
-        /// </summary>
-        /// <param name="attributes">The attributes of the <see cref="TagHelper"/>.</param>
-        /// <param name="enabled">A value indicating whether to initially enable the command dropdown items (e.g. optimize, change-tone, etc.).</param>
-        /// <returns>
-        /// The icon button to open the rich text creation dialog.
-        /// <c>null</c> if there is no active <see cref="IAIProvider"/>.
-        /// </returns>
-        TagBuilder? GenerateRichTextTool(AttributeDictionary? attributes, bool enabled = true);
+        TagBuilder? GenerateTextTool(AttributeDictionary? attributes, AICommandLocation location, bool enabled = true);
 
         /// <summary>
         /// Creates the icon button to open the suggestion dialog.
@@ -68,13 +58,13 @@ namespace Smartstore.Web.Rendering
         TagBuilder? GenerateImageCreationTool(AttributeDictionary? attributes);
 
         /// <summary>
-        /// Generates the text optimizer dropdown items for the text optimizer dropdown menu.
+        /// Generates the command dropdown items for the AI tool dropdown menu.
         /// </summary>
         /// <param name="location">Specifies the location where the menu is rendered.</param>
         /// <param name="forHtml">Whether the text input is HTML formatted.</param>
         /// <param name="enabled">Whether to initially enable the command dropdown items.</param>
-        /// <returns>The HTML content.</returns>
-        IHtmlContent GenerateOptimizeCommands(AICommandLocation location, bool forHtml = false, bool enabled = true);
+        /// <returns>The dropdown menu as HTML content.</returns>
+        IHtmlContent GenerateCommandMenuItems(AICommandLocation location, bool forHtml = false, bool enabled = true);
 
         /// <summary>
         /// Gets the URL of the dialog.

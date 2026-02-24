@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Smartstore.Core.AI;
 using Smartstore.Utilities.Html;
 
 namespace Smartstore.Web.TagHelpers.Admin
@@ -58,7 +59,7 @@ namespace Smartstore.Web.TagHelpers.Admin
 
             var enabled = !HtmlUtility.IsEmptyHtml(For?.Model?.ToString());
             var attributes = GetTagHelperAttributes();
-            var tool = AIToolHtmlGenerator.GenerateRichTextTool(attributes, enabled);
+            var tool = AIToolHtmlGenerator.GenerateTextTool(attributes, AICommandLocation.HtmlPreview, enabled);
             if (tool == null)
             {
                 return;

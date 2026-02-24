@@ -120,10 +120,10 @@ namespace Smartstore.Web.Rendering
 
             string[] additionalItemClasses = ["ai-translator"];
             var dialogUrl = GetDialogUrl(AIChatTopic.Translation);
-            var inputGroupColDiv = CreateDialogOpener(true, title: GetOpenerTitle(AIChatTopic.Translation));
+            var div = CreateDialogOpener(true, title: GetOpenerTitle(AIChatTopic.Translation));
 
-            var dropdownUl = new TagBuilder("ul");
-            dropdownUl.Attributes["class"] = "dropdown-menu dropdown-menu-right ai-translator-menu";
+            var ul = new TagBuilder("ul");
+            ul.Attributes["class"] = "dropdown-menu dropdown-menu-right ai-translator-menu";
 
             var entityType = model.GetEntityType();
             var entityTypeName = entityType == null ? string.Empty : NamedEntity.GetEntityName(entityType);
@@ -158,21 +158,15 @@ namespace Smartstore.Web.Rendering
 
                 // INFO: there is no explicit item order. To put the menu items in the same order as the HTML elements,
                 // the properties of the ILocalizedLocaleModel must be ordered accordingly.
-                dropdownUl.InnerHtml.AppendHtml(dropdownLi);
+                ul.InnerHtml.AppendHtml(dropdownLi);
             }
 
-            inputGroupColDiv.InnerHtml.AppendHtml(dropdownUl);
+            div.InnerHtml.AppendHtml(ul);
 
-            return inputGroupColDiv;
+            return div;
         }
 
-        public virtual TagBuilder GenerateTextTool(AttributeDictionary attributes, bool enabled = true)
-            => GenerateTextToolOutput(attributes, AIChatTopic.Text, enabled);
-
-        public virtual TagBuilder GenerateRichTextTool(AttributeDictionary attributes, bool enabled = true)
-            => GenerateTextToolOutput(attributes, AIChatTopic.RichText, enabled);
-
-        protected virtual TagBuilder GenerateTextToolOutput(AttributeDictionary attributes, AIChatTopic topic, bool enabled = true)
+        public virtual TagBuilder GenerateTextTool(AttributeDictionary attributes, AICommandLocation location, bool enabled = true)
         {
             CheckContextualized();
 
@@ -182,23 +176,23 @@ namespace Smartstore.Web.Rendering
                 return null;
             }
 
-            var inputGroupColDiv = CreateDialogOpener(true, title: GetOpenerTitle(AIChatTopic.Text));
-            inputGroupColDiv.Attributes["data-modal-url"] = GetDialogUrl(AIChatTopic.Text);
-            inputGroupColDiv.MergeAttributes(attributes);
+            var div = CreateDialogOpener(true, title: GetOpenerTitle(AIChatTopic.Text));
+            div.Attributes["data-modal-url"] = GetDialogUrl(AIChatTopic.Text);
+            div.MergeAttributes(attributes);
 
-            var dropdownUl = new TagBuilder("ul");
-            dropdownUl.Attributes["class"] = "dropdown-menu dropdown-menu-right";
+            var ul = new TagBuilder("ul");
+            ul.Attributes["class"] = "ai-dropdown-menu dropdown-menu dropdown-menu-right";
+            ul.Attributes["data-location"] = location.ToString();
 
-            var location = topic == AIChatTopic.RichText ? AICommandLocation.HtmlInput : AICommandLocation.TextInput;
-            var forHtml = topic == AIChatTopic.RichText;
+            var forHtml = location >= AICommandLocation.HtmlPreview;
 
-            dropdownUl.InnerHtml.AppendHtml(GenerateOptimizeCommands(location, forHtml, enabled));
-            inputGroupColDiv.InnerHtml.AppendHtml(dropdownUl);
+            ul.InnerHtml.AppendHtml(GenerateCommandMenuItems(location, forHtml, enabled));
+            div.InnerHtml.AppendHtml(ul);
 
-            return inputGroupColDiv;
+            return div;
         }
 
-        public virtual IHtmlContent GenerateOptimizeCommands(
+        public virtual IHtmlContent GenerateCommandMenuItems(
             AICommandLocation location, 
             bool forHtml = false, 
             bool enabled = true)
@@ -238,7 +232,7 @@ namespace Smartstore.Web.Rendering
             builder.AppendHtml(CreateDropdownItem(T($"{resRoot}Simplify"), enabled, "simplify", "text-left", false, className));
             builder.AppendHtml(CreateDropdownItem(T($"{resRoot}Extend"), enabled, "extend", "body-text", false, className));
 
-            if (location >= AICommandLocation.HtmlInput || (location == AICommandLocation.ChatDialog && forHtml))
+            if (location >= AICommandLocation.HtmlPreview || (location == AICommandLocation.ChatDialog && forHtml))
             {
                 builder.AppendHtml(CreateDropdownItem(T($"{resRoot}Organize"), enabled, "organize", "card-heading", false, className));
             }
@@ -282,12 +276,12 @@ namespace Smartstore.Web.Rendering
                 return null;
             }
 
-            var optionsList = new TagBuilder("ul");
-            optionsList.Attributes["class"] = "dropdown-menu dropdown-menu-slide dropdown-menu-right";
+            var ul = new TagBuilder("ul");
+            ul.Attributes["class"] = "dropdown-menu dropdown-menu-slide dropdown-menu-right";
 
             foreach (var option in options)
             {
-                optionsList.InnerHtml.AppendHtml(CreateDropdownItem(option, enabled, command, null, false, additionalClasses));
+                ul.InnerHtml.AppendHtml(CreateDropdownItem(option, enabled, command, null, false, additionalClasses));
             }
 
             var subDropdown = CreateDropdownItem(
@@ -297,7 +291,7 @@ namespace Smartstore.Web.Rendering
                 iconName,
                 false);
             subDropdown.Attributes["class"] = "dropdown-group";
-            subDropdown.InnerHtml.AppendHtml(optionsList);
+            subDropdown.InnerHtml.AppendHtml(ul);
 
             return subDropdown;
         }
@@ -343,19 +337,19 @@ namespace Smartstore.Web.Rendering
         /// <returns>The dialog opener.</returns>
         protected virtual TagBuilder CreateDialogOpener(bool isDropdown, string additionalClasses = "", string title = "")
         {
-            var inputGroupColDiv = new TagBuilder("div");
-            inputGroupColDiv.Attributes["class"] = "has-icon has-icon-right ai-dialog-opener-root";
-            inputGroupColDiv.AppendCssClass("ai-provider-tool");
+            var div = new TagBuilder("div");
+            div.Attributes["class"] = "has-icon has-icon-right ai-dialog-opener-root";
+            div.AppendCssClass("ai-provider-tool");
 
             if (isDropdown)
             {
-                inputGroupColDiv.AppendCssClass("dropdown");
+                div.AppendCssClass("dropdown");
             }
 
             var iconA = GenerateOpenerIcon(isDropdown, additionalClasses, title);
-            inputGroupColDiv.InnerHtml.AppendHtml(iconA);
+            div.InnerHtml.AppendHtml(iconA);
 
-            return inputGroupColDiv;
+            return div;
         }
 
         /// <summary>
