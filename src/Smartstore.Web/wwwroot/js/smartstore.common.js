@@ -447,14 +447,16 @@
         return $('meta[name="__rvt"]').attr("content") || $('input[name="__RequestVerificationToken"]').val();
     };
 
-    window.disableSubmitTemporarily = function (form) {
-        const btn = form?.querySelector('[type="submit"]');
-        if (btn) {
+    window.disableSubmitTemporarily = function (form, duration = 4000) {
+        if (!form) return;
+
+        const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+        submitButtons.forEach(btn => {
             btn.disabled = true;
-            setTimeout(function () {
+            setTimeout(() => {
                 try { btn.disabled = false; } catch { }
-            }, 4000);
-        }
+            }, duration);
+        });
     }
 
     /**
