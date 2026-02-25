@@ -61,7 +61,7 @@
             const isRichText = toBool(tool.data('is-richtext')) && cmd === "generate";
 
             let params = {
-                location: location,
+                commandLocation: location,
                 entityName: tool.data('entity-name'),
                 Type: tool.data('entity-type'),
                 targetProperty: tool.data('target-property'),
