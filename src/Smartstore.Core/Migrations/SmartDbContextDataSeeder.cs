@@ -113,6 +113,12 @@ namespace Smartstore.Core.Data.Migrations
                 "I would like to withdraw the following items:", 
                 "Ich möchte folgende Artikel stornieren:");
 
+            builder.AddOrUpdate("Account.CustomerOrders.ReturnItems", "Return items", "Artikel zurücksenden");
+
+            builder.AddOrUpdate("ReturnRequests.NoItemsSubmitted",
+                "Please select the number of items you wish to return.",
+                "Bitte wählen Sie die Menge der Artikel aus, die Sie zurücksenden möchten.");
+
             builder.AddOrUpdate("Account.PasswordRecovery.EmailHasBeenSent",
                 "If there is an account associated with this email, we have sent a link to reset your password.",
                 "Falls ein Konto mit dieser E-Mail-Adresse verknüpft ist, haben wir Ihnen soeben Anweisungen zum Zurücksetzen Ihres Passworts zugeschickt.");
