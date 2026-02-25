@@ -70,6 +70,9 @@ namespace Smartstore.Data.Providers
                         // This way we can leave the configuration of the relationship to EF in many cases.
                         w.Ignore(CoreEventId.PossibleIncorrectRequiredNavigationWithQueryFilterInteractionWarning);
 
+                        // Suppress the warning for "No configurations found in assembly"
+                        w.Ignore(CoreEventId.NoEntityTypeConfigurationsWarning);
+
                         #region Test
                         //// To identify the query that's triggering MultipleCollectionIncludeWarning.
                         //w.Throw(RelationalEventId.MultipleCollectionIncludeWarning);
