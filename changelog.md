@@ -29,6 +29,9 @@
 
 - Moved AI command tools from Media Manager toolbar to folder dropwdown menu.
 - Enhanced bot and AI agent detection with heuristic checks further reduces DB junk.
+- **CAPTCHA**
+    - Improved fail-safe behavior to maintain user accessibility while blocking automated abuse
+    - Fixed form submission issue in certain edge cases
 - #1459 Cart sorting: The selected items must always come before the unselected ones.
 - Checkout: After payment confirmation on the third-party site, you will be redirected directly to the completed page if successful. The intermediate step via the confirmation page is omitted.
 - Theming: Added `.prose` helpers for readable long-form content: optimized measure (narrow/standard/wide) plus comfortable typography defaults.
