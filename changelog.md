@@ -68,6 +68,7 @@
 - Fixed "Failed to add specification attribute" when assigning a specification attribute to a product.
 - Fixed sitemap generator progress bar.
 - Currency assignment by Country/IP lookup has not respected store restrictions.
+- EasyCredit: Get cart by using the current store ID explicitly.
 
 
 ## Smartstore 6.3.0
