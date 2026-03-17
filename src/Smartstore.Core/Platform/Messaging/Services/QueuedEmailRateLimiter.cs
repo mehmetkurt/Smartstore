@@ -1,0 +1,101 @@
+#nullable enable
+
+using System.Threading.RateLimiting;
+using Smartstore.Core.Security;
+
+namespace Smartstore.Core.Messaging;
+
+public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
+{
+    private readonly TokenBucketRateLimiter? _queuedMailLimiter;
+    private readonly RateLimiter _logRateLimiter = new TokenBucketRateLimiter(new TokenBucketRateLimiterOptions
+    {
+        QueueLimit = 1,
+        ReplenishmentPeriod = TimeSpan.FromSeconds(5),
+        TokensPerPeriod = 20,
+        TokenLimit = 20
+    });
+
+    public QueuedEmailRateLimiter(ResiliencySettings settings)
+    {
+        Guard.NotNull(settings);
+
+        MaxMailsPerRun = NormalizeLimit(settings.QueuedMailMaxPerRun);
+        _queuedMailLimiter = CreateTokenBucket(settings.QueuedMailSendRateLimit, settings.QueuedMailSendRateWindow);
+    }
+
+    public ILogger Logger { get; } = NullLogger.Instance;
+
+    public virtual int? MaxMailsPerRun { get; }
+
+    public virtual int GetAllowedMailCount(int requestedCount)
+    {
+        CheckDisposed();
+
+        if (requestedCount <= 0)
+        {
+            return 0;
+        }
+
+        if (_queuedMailLimiter == null)
+        {
+            return requestedCount;
+        }
+
+        for (var allowedCount = requestedCount; allowedCount > 0; allowedCount--)
+        {
+            using var lease = _queuedMailLimiter.AttemptAcquire(allowedCount);
+            if (lease.IsAcquired)
+            {
+                if (allowedCount < requestedCount)
+                {
+                    TryLogThrottled($"Queued mail rate limit partially applied. Requested: {requestedCount}, Granted: {allowedCount}.");
+                }
+
+                return allowedCount;
+            }
+        }
+
+        TryLogThrottled($"Queued mail rate limit exceeded. Requested: {requestedCount}, Granted: 0.");
+        return 0;
+    }
+
+    protected override void OnDispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _queuedMailLimiter?.Dispose();
+            _logRateLimiter?.Dispose();
+        }
+    }
+
+    private void TryLogThrottled(string message)
+    {
+        using var logLease = _logRateLimiter.AttemptAcquire();
+        if (logLease.IsAcquired)
+        {
+            Logger.Warn(message);
+        }
+    }
+
+    private static int? NormalizeLimit(int? limit)
+        => limit > 0 ? limit : null;
+
+    private static TokenBucketRateLimiter? CreateTokenBucket(int? limit, TimeSpan period)
+    {
+        limit = NormalizeLimit(limit);
+        if (limit == null || period <= TimeSpan.Zero)
+        {
+            return null;
+        }
+
+        return new TokenBucketRateLimiter(new TokenBucketRateLimiterOptions
+        {
+            TokenLimit = limit.Value,
+            TokensPerPeriod = limit.Value,
+            ReplenishmentPeriod = period,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        });
+    }
+}

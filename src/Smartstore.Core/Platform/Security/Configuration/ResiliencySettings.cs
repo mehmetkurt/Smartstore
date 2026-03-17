@@ -119,5 +119,22 @@ namespace Smartstore.Core.Security
         /// individual user type fairness.
         /// </remarks>
         public int? PeakTrafficLimitGlobal { get; set; } = 50;
+
+        /// <summary>
+        /// Gets or sets the maximum number of queued mails that may be processed during a single scheduler run.
+        /// A value of <c>null</c> means there is no per-run cap.
+        /// </summary>
+        public int? QueuedMailMaxPerRun { get; set; } = 500;
+
+        /// <summary>
+        /// Gets or sets the duration of the queued mail rate observation window.
+        /// </summary>
+        public TimeSpan QueuedMailSendRateWindow { get; set; } = TimeSpan.FromMinutes(1);
+
+        /// <summary>
+        /// Gets or sets the maximum number of queued mails that may be sent during the <see cref="QueuedMailSendRateWindow"/>.
+        /// A value of <c>null</c> means there is no queued mail rate limit.
+        /// </summary>
+        public int? QueuedMailSendRateLimit { get; set; } = 300;
     }
 }
