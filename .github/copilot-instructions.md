@@ -11,7 +11,7 @@
 ## Code Style
 - Use specific formatting rules
 - Follow naming conventions
-- Always enable nullable reference types explicitly at file level in new or modified C# files using `#nullable enable`.
+- Enable nullable reference types explicitly at file level in new or modified C# files using `#nullable enable`, but only if really necessary.
 - New admin model properties must be decorated with `LocalizedDisplayAttribute` using a resource key. For locale resources, use the `AddOrUpdate` overload (key, value, deValue, hint, deHint) where value/deValue are the short visible labels and hint/deHint are the help tooltip texts for a property.
 
 ## Project-Specific Rules

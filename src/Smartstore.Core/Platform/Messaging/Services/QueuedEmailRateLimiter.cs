@@ -7,7 +7,7 @@ namespace Smartstore.Core.Messaging;
 
 public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
 {
-    private readonly TokenBucketRateLimiter? _queuedMailLimiter;
+    private readonly TokenBucketRateLimiter? _mailRateLimiter;
     private readonly RateLimiter _logRateLimiter = new TokenBucketRateLimiter(new TokenBucketRateLimiterOptions
     {
         QueueLimit = 1,
@@ -18,15 +18,10 @@ public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
 
     public QueuedEmailRateLimiter(ResiliencySettings settings)
     {
-        Guard.NotNull(settings);
-
-        MaxMailsPerRun = NormalizeLimit(settings.QueuedMailMaxPerRun);
-        _queuedMailLimiter = CreateTokenBucket(settings.QueuedMailSendRateLimit, settings.QueuedMailSendRateWindow);
+        _mailRateLimiter = CreateTokenBucket(settings.QueuedMailSendRateLimit, settings.QueuedMailSendRateWindow);
     }
 
     public ILogger Logger { get; } = NullLogger.Instance;
-
-    public virtual int? MaxMailsPerRun { get; }
 
     public virtual int GetAllowedMailCount(int requestedCount)
     {
@@ -37,14 +32,14 @@ public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
             return 0;
         }
 
-        if (_queuedMailLimiter == null)
+        if (_mailRateLimiter == null)
         {
             return requestedCount;
         }
 
         for (var allowedCount = requestedCount; allowedCount > 0; allowedCount--)
         {
-            using var lease = _queuedMailLimiter.AttemptAcquire(allowedCount);
+            using var lease = _mailRateLimiter.AttemptAcquire(allowedCount);
             if (lease.IsAcquired)
             {
                 if (allowedCount < requestedCount)
@@ -64,7 +59,7 @@ public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
     {
         if (disposing)
         {
-            _queuedMailLimiter?.Dispose();
+            _mailRateLimiter?.Dispose();
             _logRateLimiter?.Dispose();
         }
     }
@@ -89,13 +84,14 @@ public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
             return null;
         }
 
-        return new TokenBucketRateLimiter(new TokenBucketRateLimiterOptions
-        {
-            TokenLimit = limit.Value,
-            TokensPerPeriod = limit.Value,
-            ReplenishmentPeriod = period,
-            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-            QueueLimit = 0
-        });
+        return new TokenBucketRateLimiter(
+            new TokenBucketRateLimiterOptions
+            {
+                TokenLimit = limit.Value,
+                TokensPerPeriod = limit.Value,
+                ReplenishmentPeriod = period,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            });
     }
 }
