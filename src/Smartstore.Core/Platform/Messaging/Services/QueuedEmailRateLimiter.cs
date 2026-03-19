@@ -5,9 +5,9 @@ using Smartstore.Core.Security;
 
 namespace Smartstore.Core.Messaging;
 
-public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
+public class QueuedEmailRateLimiter : Disposable, IEmailRateLimiter
 {
-    private readonly TokenBucketRateLimiter? _mailRateLimiter;
+    private readonly TokenBucketRateLimiter? _sendRateLimiter;
     private readonly RateLimiter _logRateLimiter = new TokenBucketRateLimiter(new TokenBucketRateLimiterOptions
     {
         QueueLimit = 1,
@@ -18,12 +18,12 @@ public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
 
     public QueuedEmailRateLimiter(ResiliencySettings settings)
     {
-        _mailRateLimiter = CreateTokenBucket(settings.QueuedMailSendRateLimit, settings.QueuedMailSendRateWindow);
+        _sendRateLimiter = CreateTokenBucket(settings.MailSendRateLimit, settings.MailSendRateWindow);
     }
 
     public ILogger Logger { get; } = NullLogger.Instance;
 
-    public virtual int GetAllowedMailCount(int requestedCount)
+    public virtual int GetAllowedSendCount(int requestedCount)
     {
         CheckDisposed();
 
@@ -32,14 +32,14 @@ public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
             return 0;
         }
 
-        if (_mailRateLimiter == null)
+        if (_sendRateLimiter == null)
         {
             return requestedCount;
         }
 
         for (var allowedCount = requestedCount; allowedCount > 0; allowedCount--)
         {
-            using var lease = _mailRateLimiter.AttemptAcquire(allowedCount);
+            using var lease = _sendRateLimiter.AttemptAcquire(allowedCount);
             if (lease.IsAcquired)
             {
                 if (allowedCount < requestedCount)
@@ -59,7 +59,7 @@ public class QueuedEmailRateLimiter : Disposable, IQueuedEmailRateLimiter
     {
         if (disposing)
         {
-            _mailRateLimiter?.Dispose();
+            _sendRateLimiter?.Dispose();
             _logRateLimiter?.Dispose();
         }
     }

@@ -10,7 +10,7 @@ internal sealed class MessagingStarter : StarterBase
 {
     public override void ConfigureContainer(ContainerBuilder builder, IApplicationContext appContext)
     {
-        builder.RegisterType<QueuedEmailRateLimiter>().As<IQueuedEmailRateLimiter>().SingleInstance();
+        builder.RegisterType<QueuedEmailRateLimiter>().As<IEmailRateLimiter>().SingleInstance();
         builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerLifetimeScope();
         builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerLifetimeScope();
         builder.RegisterType<NewsletterSubscriptionService>().As<INewsletterSubscriptionService>().InstancePerLifetimeScope();

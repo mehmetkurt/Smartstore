@@ -149,6 +149,35 @@
                             <span asp-validation-for="ResiliencySettings.PeakTrafficLimitGlobal"></span>
                         </div>
                     </div>
+
+                    <div class="adminRow">
+                        <div class="admin-config-group">
+                            <div class="title">
+                                @T("Admin.Configuration.Settings.Resiliency.QueuedMailSending")
+                            </div>
+                            <div class="text-muted">
+                                @T("Admin.Configuration.Settings.Resiliency.QueuedMailSendingNotes")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="adminRow">
+                        <div class="adminTitle">
+                            <smart-label asp-for="ResiliencySettings.MailSendRateWindow" />
+                        </div>
+                        <div class="adminData">
+                            <input type="time" step="1" asp-for="ResiliencySettings.MailSendRateWindow" />
+                            <span asp-validation-for="ResiliencySettings.MailSendRateWindow"></span>
+                        </div>
+                    </div>
+                    <div class="adminRow">
+                        <div class="adminTitle">
+                            <smart-label asp-for="ResiliencySettings.MailSendRateLimit" />
+                        </div>
+                        <div class="adminData">
+                            <editor asp-for="ResiliencySettings.MailSendRateLimit" />
+                            <span asp-validation-for="ResiliencySettings.MailSendRateLimit"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </tab>

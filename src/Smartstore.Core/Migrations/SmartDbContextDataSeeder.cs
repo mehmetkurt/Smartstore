@@ -158,6 +158,25 @@ namespace Smartstore.Core.Data.Migrations
             builder.AddOrUpdate("Admin.Configuration.Settings.Order.ReturnRequestSettings", "Returns", "Retouren");
 
             builder.AddOrUpdate("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnTargets.Option.Withdrawal", "Withdrawal", "Widerruf");
+
+            var prefix = "Admin.Configuration.Settings.Resiliency";
+
+            builder.AddOrUpdate($"{prefix}.QueuedMailSending", "Mail Sending", "E-Mail-Versand");
+            builder.AddOrUpdate($"{prefix}.QueuedMailSendingNotes",
+                "Limits how many queued emails can be sent within a specific time window to prevent overload during email bursts.",
+                "Begrenzt die Anzahl der E-Mails, die innerhalb eines bestimmten Zeitfensters versendet werden können, um Überlastung bei E-Mail-Spitzen zu verhindern.");
+
+            builder.AddOrUpdate($"{prefix}.MailSendRateWindow",
+                "Time window (hh:mm:ss)",
+                "Zeitfenster (hh:mm:ss)",
+                "The time period for measuring the queued mail send rate (e.g., 1 minute).",
+                "Der Zeitraum für die Messung der E-Mail-Versandrate (z.B. 1 Minute).");
+
+            builder.AddOrUpdate($"{prefix}.MailSendRateLimit",
+                "Limit",
+                "Grenzwert",
+                "The maximum number of queued emails that may be sent during the time window. Empty value means there is no limit.",
+                "Die maximale Anzahl von E-Mails, die während des Zeitfensters versendet werden dürfen. Ein leerer Wert bedeutet: keine Begrenzung.");
         }
     }
 }

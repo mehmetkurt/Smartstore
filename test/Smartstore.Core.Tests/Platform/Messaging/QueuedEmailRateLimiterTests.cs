@@ -13,7 +13,7 @@ public class QueuedEmailRateLimiterTests
     {
         using var limiter = CreateLimiter(sendRateLimit: null);
 
-        Assert.That(limiter.GetAllowedMailCount(7), Is.EqualTo(7));
+        Assert.That(limiter.GetAllowedSendCount(7), Is.EqualTo(7));
     }
 
     [Test]
@@ -21,17 +21,17 @@ public class QueuedEmailRateLimiterTests
     {
         using var limiter = CreateLimiter(sendRateLimit: 2);
 
-        Assert.That(limiter.GetAllowedMailCount(1), Is.EqualTo(1));
-        Assert.That(limiter.GetAllowedMailCount(2), Is.EqualTo(1));
-        Assert.That(limiter.GetAllowedMailCount(1), Is.EqualTo(0));
+        Assert.That(limiter.GetAllowedSendCount(1), Is.EqualTo(1));
+        Assert.That(limiter.GetAllowedSendCount(2), Is.EqualTo(1));
+        Assert.That(limiter.GetAllowedSendCount(1), Is.EqualTo(0));
     }
 
     private static QueuedEmailRateLimiter CreateLimiter(int? sendRateLimit)
     {
         var settings = new ResiliencySettings
         {
-            QueuedMailSendRateLimit = sendRateLimit,
-            QueuedMailSendRateWindow = TimeSpan.FromMinutes(1)
+            MailSendRateLimit = sendRateLimit,
+            MailSendRateWindow = TimeSpan.FromMinutes(1)
         };
 
         return new QueuedEmailRateLimiter(settings);

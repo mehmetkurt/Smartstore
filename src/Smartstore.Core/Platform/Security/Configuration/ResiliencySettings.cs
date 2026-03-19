@@ -127,15 +127,15 @@ namespace Smartstore.Core.Security
         #region Email
 
         /// <summary>
-        /// Gets or sets the duration of the queued mail rate observation window.
+        /// Gets or sets the duration of the mail send rate observation window.
         /// </summary>
-        public TimeSpan QueuedMailSendRateWindow { get; set; } = TimeSpan.FromMinutes(1);
+        public TimeSpan MailSendRateWindow { get; set; } = TimeSpan.FromMinutes(1);
 
         /// <summary>
-        /// Gets or sets the maximum number of queued mails that may be sent during the <see cref="QueuedMailSendRateWindow"/>.
+        /// Gets or sets the maximum number of mails that may be sent during the <see cref="MailSendRateWindow"/>.
         /// A value of <c>null</c> means there is no queued mail rate limit.
         /// </summary>
-        public int? QueuedMailSendRateLimit { get; set; } = 500;
+        public int? MailSendRateLimit { get; set; } = 500;
 
         #endregion
     }

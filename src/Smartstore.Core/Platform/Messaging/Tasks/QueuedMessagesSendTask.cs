@@ -4,18 +4,18 @@ using Smartstore.Scheduling;
 namespace Smartstore.Core.Messaging.Tasks;
 
 /// <summary>
-/// A task that periodically send queued messages.
+/// A task that periodically sends queued messages.
 /// </summary>
 public partial class QueuedMessagesSendTask : ITask
 {
     private readonly SmartDbContext _db;
     private readonly IQueuedEmailService _queuedEmailService;
-    private readonly IQueuedEmailRateLimiter _rateLimiter;
+    private readonly IEmailRateLimiter _rateLimiter;
 
     public QueuedMessagesSendTask(
         SmartDbContext db, 
         IQueuedEmailService queuedEmailService, 
-        IQueuedEmailRateLimiter rateLimiter)
+        IEmailRateLimiter rateLimiter)
     {
         _db = db;
         _queuedEmailService = queuedEmailService;
@@ -30,7 +30,7 @@ public partial class QueuedMessagesSendTask : ITask
 
         while (true)
         {
-            var allowedCount = _rateLimiter.GetAllowedMailCount(maxPageSize);
+            var allowedCount = _rateLimiter.GetAllowedSendCount(maxPageSize);
             if (allowedCount <= 0)
             {
                 break;
