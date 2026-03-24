@@ -361,7 +361,7 @@ namespace Smartstore.Scheduling
                     )
                     .ToListAsync();
 
-                if (history.Any())
+                if (history.Count > 0)
                 {
                     string abnormalAbort = T("Admin.System.ScheduleTasks.AbnormalAbort");
                     foreach (var entry in history)
