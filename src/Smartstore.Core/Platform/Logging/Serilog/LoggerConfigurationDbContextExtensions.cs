@@ -18,7 +18,7 @@ public static class LoggerConfigurationDbContextExtensions
         var batchingOptions = new PeriodicBatchingSinkOptions
         {
             BatchSizeLimit = batchSize,
-            Period = period ?? TimeSpan.FromSeconds(5),
+            Period = period ?? TimeSpan.FromSeconds(10),
             EagerlyEmitFirstEvent = eagerlyEmitFirstEvent,
             QueueLimit = queueLimit
         };

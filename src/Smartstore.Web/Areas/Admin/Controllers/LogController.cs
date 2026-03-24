@@ -178,7 +178,8 @@ public class LogController : AdminController
             HttpMethod = log.HttpMethod,
             UserName = log.UserName,
             UserAgent = log.UserAgent,
-            ViewUrl = Url.Action(nameof(View), "Log", new { id = log.Id })
+            OccurrenceCount = log.OccurrenceCount,
+            ViewUrl = Url.Action(nameof(View), "Log", new { id = log.Id }),
         };
 
         if (loggerNamesMap != null)
@@ -202,6 +203,8 @@ public class LogController : AdminController
             model.FullMessage = log.FullMessage;
             model.PageUrl = log.PageUrl;
             model.ReferrerUrl = log.ReferrerUrl;
+            // TODO: (mc) Occurrences should be a list of occurrence times instead of a string
+            model.Occurrences = log.Occurrences;
         }
 
         return model;
