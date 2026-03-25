@@ -1425,7 +1425,6 @@ a.editable {
 // Attributes
 // --------------------------------------------------------------
 
-
 #order-edit .checkout-attributes {
     .attr-caption {
         font-weight: $font-weight-medium;
@@ -1679,3 +1678,49 @@ a.editable {
 .ai-dialog-opener-root .fu-remove {
     margin-inline-end: 2.25em;
 }
+
+
+// Stacktrace formatting (GitHub style)
+// --------------------------------------------------------------
+
+.stacktrace {
+    --st-base-color: var(--body-color);
+    --st-type-color: var(--st-base-color);
+    --st-method-color: #8250df;
+    --st-param-color: var(--st-base-color);
+    --st-param-type-color: #2b91af;
+    --st-param-name-color: var(--st-base-color);
+    --st-file-color: #f68a00;
+    --st-line-color: var(--st-base-color);
+
+    font-weight: bold;
+    color: var(--st-base-color);
+    font-size: inherit;
+
+    &.wrapped {
+        white-space: pre-wrap;
+    }
+
+    > [class^='st-'] {
+        font-weight: normal;
+    }
+}
+
+.btn-stacktrace-wrap {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 8px;
+    opacity: 0;
+
+    .stacktrace-root:hover > & {
+        opacity: 1;
+    }
+}
+
+.st-type            { color: var(--st-type-color); } 
+.st-method          { color: var(--st-method-color); } 
+.st-frame-params    { color: var(--st-param-color); } 
+.st-param-type      { color: var(--st-param-type-color); } 
+.st-param-name      { color: var(--st-param-name-color); }
+.st-file            { color: var(--st-file-color); }
+.st-line            { color: var(--st-line-color); font-weight: 600 !important; }
