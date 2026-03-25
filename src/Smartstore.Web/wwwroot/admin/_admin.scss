@@ -1683,7 +1683,8 @@ a.editable {
 // Stacktrace formatting (GitHub style)
 // --------------------------------------------------------------
 
-.stacktrace {
+.stacktrace-root {
+    --st-bg-color: var(--gray-150);
     --st-base-color: var(--body-color);
     --st-type-color: var(--st-base-color);
     --st-method-color: #8250df;
@@ -1693,9 +1694,26 @@ a.editable {
     --st-file-color: #f68a00;
     --st-line-color: var(--st-base-color);
 
-    font-weight: bold;
+    position: relative;
+}
+
+.stacktrace-header {
+    position: sticky;
+    top: var(--content-offset, 0px);
+    background-color: var(--st-bg-color);
+    border-bottom: 1px solid #fff;
+    @include border-top-radius(var(--border-radius-md));
+}
+
+.stacktrace {
+    background-color: var(--st-bg-color);
     color: var(--st-base-color);
     font-size: inherit;
+    @include border-top-radius(0);
+
+    &:has(> .st-frame) {
+        font-weight: bold;
+    }
 
     &.wrapped {
         white-space: pre-wrap;
@@ -1703,17 +1721,6 @@ a.editable {
 
     > [class^='st-'] {
         font-weight: normal;
-    }
-}
-
-.btn-stacktrace-wrap {
-    position: absolute;
-    top: 6px;
-    inset-inline-end: 8px;
-    opacity: 0;
-
-    .stacktrace-root:hover > & {
-        opacity: 1;
     }
 }
 

@@ -124,16 +124,19 @@
             </div>
         </div>
         <div sm-if="Model.FullMessage.HasValue()" class="adminRow">
-            <div class="adminTitle">
-                <smart-label asp-for="FullMessage" />
-            </div>
             <div class="adminData wide">
-                @*No whitespace within pre tag*@
-                <div class="stacktrace-root position-relative">
+                <div class="stacktrace-root">
+                    <div class="stacktrace-header pl-3 p-2 d-flex align-items-center" style="gap: 2px">
+                        <smart-label asp-for="FullMessage" class="mb-0" />
+                        <button id="FullMessage-copy" type="button" class="btn-clipboard btn btn-plain btn-icon rounded-circle ml-auto" data-copy-from="#FullMessage">
+                            <bootstrap-icon name="copy" />
+                        </button>
+                        <button id="FullMessage-wrap" type="button" class="btn-stacktrace-wrap btn btn-plain btn-icon rounded-circle" title="Wrap">
+                            <bootstrap-icon name="text-wrap" />
+                        </button>
+                    </div>
+                    @*No whitespace within pre tag*@
                     <pre id="FullMessage" class="stacktrace">@Html.DisplayFor(model => model.FullMessage)</pre>
-                    <button id="FullMessage-wrap" type="button" class="btn-stacktrace-wrap btn btn-clear-dark btn-sm btn-icon btn-no-border" title="Wrap">
-                        <bootstrap-icon name="text-wrap" />
-                    </button>
                 </div>
             </div>
         </div>
