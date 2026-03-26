@@ -203,8 +203,10 @@ public class LogController : AdminController
             model.FullMessage = log.FullMessage;
             model.PageUrl = log.PageUrl;
             model.ReferrerUrl = log.ReferrerUrl;
-            // TODO: (mc) Occurrences should be a list of occurrence times instead of a string
-            model.Occurrences = log.Occurrences;
+            model.Occurrences = log.Occurrences?.Select(x =>
+            {
+                return _dateTimeHelper.ConvertToUserTime(x.TimestampUtc, DateTimeKind.Utc).ToLongTimeString();
+            })?.ToList();
         }
 
         return model;

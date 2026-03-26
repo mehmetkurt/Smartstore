@@ -118,8 +118,15 @@
                 <smart-label asp-for="CreatedOn" />
             </div>
             <div class="adminData">
-                <div class="form-control-plaintext">
-                    @Html.DisplayFor(model => model.CreatedOn)
+                <div class="form-control-plaintext hstack gap-1">
+                    <span class="pr-1">@Html.DisplayFor(model => model.CreatedOn)</span>
+                    @if (Model.Occurrences != null)
+                    {
+                        foreach (var occ in Model.Occurrences)
+                        {
+                            <span class="badge badge-outline badge-success rounded-pill fwb px-2">+@occ</span>
+                        }      
+                    }
                 </div>
             </div>
         </div>

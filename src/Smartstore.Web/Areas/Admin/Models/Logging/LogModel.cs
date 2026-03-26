@@ -1,4 +1,6 @@
-﻿namespace Smartstore.Admin.Models.Logging
+﻿using Smartstore.Core.Logging;
+
+namespace Smartstore.Admin.Models.Logging
 {
     [LocalizedDisplay("Admin.System.Log.Fields.")]
     public class LogModel : EntityModelBase
@@ -50,11 +52,7 @@
 
         public int OccurrenceCount { get; set; }
 
-        /// <summary>
-        /// JSON array of additional UTC occurrence timestamps (after the first hit).
-        /// Null when <see cref="OccurrenceCount"/> is 1.
-        /// </summary>
         [LocalizedDisplay("*Occurrences")]
-        public string Occurrences { get; set; }
+        public List<string> Occurrences { get; set; }
     }
 }

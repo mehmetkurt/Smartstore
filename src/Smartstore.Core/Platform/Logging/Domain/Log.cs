@@ -29,7 +29,19 @@ internal class LogMap : IEntityTypeConfiguration<Log>
             .WithMany()
             .HasForeignKey(c => c.CustomerId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.OwnsMany(c => c.Occurrences, builder =>
+        {
+            builder.ToJson();
+            // Map 'TimestampUtc' to shorter 't' in JSON-String
+            builder.Property(x => x.TimestampUtc).HasJsonPropertyName("t");
+        });
     }
+}
+
+public class LogOccurrence
+{
+    public DateTime TimestampUtc { get; set; }
 }
 
 /// <summary>
@@ -112,18 +124,18 @@ public partial class Log : BaseEntity
     public string UserName { get; set; }
 
     /// <summary>
-    /// Gets or sets the total number of times this log entry occurred within the aggregation window.
-    /// Defaults to 1 for entries that have not been deduplicated.
-    /// </summary>
-    public int OccurrenceCount { get; set; } = 1;
-
-    /// <summary>
     /// Gets or sets a JSON array of additional UTC occurrence timestamps, starting from the second hit.
     /// The first occurrence is always <see cref="CreatedOnUtc"/>.
     /// Null when <see cref="OccurrenceCount"/> is 1. Capped at 500 entries.
     /// </summary>
     [MaxLength, NonSummary]
-    public string Occurrences { get; set; }
+    public List<LogOccurrence> Occurrences { get; set; }
+
+    /// <summary>
+    /// Gets or sets the total number of times this log entry occurred within the aggregation window.
+    /// Defaults to 1 for entries that have not been deduplicated.
+    /// </summary>
+    public int OccurrenceCount { get; set; } = 1;
 
     /// <summary>
     /// Gets or sets the log level

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Text.Json;
 using Autofac;
 using Serilog.Events;
 using Serilog.Sinks.PeriodicBatching;
@@ -33,21 +32,6 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
     }
 
     public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
-    {
-        var db = CreateDbContext();
-
-        if (db != null)
-        {
-            await using (db)
-            {
-                db.MinHookImportance = HookImportance.Important;
-                db.Logs.AddRange(batch.Select(ConvertLogEvent));
-                await db.SaveChangesAsync();
-            }
-        }
-    }
-
-    public async Task EmitBatchAsync2(IEnumerable<LogEvent> batch)
     {
         var db = CreateDbContext();
         if (db == null)
@@ -97,10 +81,11 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
                     }
 
                     // Write aggregated state directly onto the entity before INSERT.
-                    log.OccurrenceCount = newEntry.TotalCount;
-                    if (newEntry.Occurrences.Count > 0)
+                    var snapshot = newEntry.GetSnapshot();
+                    log.OccurrenceCount = snapshot.TotalCount;
+                    if (snapshot.Occurrences.Count > 0)
                     {
-                        log.Occurrences = JsonSerializer.Serialize(newEntry.Occurrences);
+                        log.Occurrences = snapshot.Occurrences;
                     }
 
                     toInsert.Add((fingerprint, log, newEntry));
@@ -121,17 +106,24 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
             }
 
             // UPDATE existing records with the accumulated occurrences.
-            foreach (var entry in toUpdate)
+            // Uses EF Core change tracking so that the JSON-owned collection is serialized correctly.
+            if (toUpdate.Count > 0)
             {
-                var occJson = entry.Occurrences.Count > 0
-                    ? JsonSerializer.Serialize(entry.Occurrences)
-                    : null;
+                var updateMap = toUpdate.ToDictionary(e => e.LogId);
+                var logs = await db.Logs
+                    .Where(l => updateMap.Keys.Contains(l.Id))
+                    .ToListAsync();
 
-                await db.Logs
-                    .Where(l => l.Id == entry.LogId)
-                    .ExecuteUpdateAsync(s => s
-                        .SetProperty(l => l.OccurrenceCount, entry.TotalCount)
-                        .SetProperty(l => l.Occurrences, occJson));
+                foreach (var log in logs)
+                {
+                    var entry = updateMap[log.Id];
+                    var snapshot = entry.GetSnapshot();
+                    log.OccurrenceCount = snapshot.TotalCount;
+                    // Pass a snapshot so future additions to the entry do not affect the tracked instance.
+                    log.Occurrences = snapshot.Occurrences.Count > 0 ? snapshot.Occurrences : null;
+                }
+
+                await db.SaveChangesAsync();
             }
 
             // Periodically evict expired entries to keep the map from growing unboundedly.
@@ -222,11 +214,14 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
 
     /// <summary>
     /// Tracks the in-memory state for a single aggregation window.
-    /// <see cref="Occurrences"/> holds every timestamp AFTER the first occurrence;
+    /// Occurrences holds every timestamp AFTER the first occurrence;
     /// the first is already persisted in <see cref="Log.CreatedOnUtc"/>.
     /// </summary>
     private sealed class AggregationEntry
     {
+        private readonly Lock _lock = new();
+        private readonly List<LogOccurrence> _occurrences = [];
+
         public AggregationEntry(DateTime windowStart)
         {
             WindowStart = windowStart;
@@ -235,21 +230,29 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
         public int LogId;
         public DateTime WindowStart { get; }
 
-        /// <summary>Additional occurrence timestamps (2nd hit onwards), capped at <see cref="MaxOccurrencesPerEntry"/>.</summary>
-        public List<DateTime> Occurrences { get; } = [];
-
         /// <summary>Total occurrence count including the first insertion.</summary>
         public int TotalCount { get; private set; } = 1;
 
         public void AddOccurrences(IEnumerable<DateTime> timestamps)
         {
-            foreach (var ts in timestamps)
+            lock (_lock)
             {
-                TotalCount++;
-                if (Occurrences.Count < MaxOccurrencesPerEntry)
+                foreach (var ts in timestamps)
                 {
-                    Occurrences.Add(ts);
+                    TotalCount++;
+                    if (_occurrences.Count < MaxOccurrencesPerEntry)
+                    {
+                        _occurrences.Add(new LogOccurrence { TimestampUtc = ts });
+                    }
                 }
+            }
+        }
+
+        public (int TotalCount, List<LogOccurrence> Occurrences) GetSnapshot()
+        {
+            lock (_lock)
+            {
+                return (TotalCount, [.. _occurrences]);
             }
         }
     }

@@ -22,8 +22,11 @@ internal class LogAggregation : Migration, ILocaleResourcesProvider
         if (!Schema.Table(TableName).Column("Occurrences").Exists())
         {
             Create.Column("Occurrences").OnTable(TableName)
-                .AsString(int.MaxValue)
+                .AsJson()
                 .Nullable();
+
+            IfDatabase(GeneratorIdConstants.SqlServer)
+                .Execute.Sql("ALTER TABLE [Log] ADD CONSTRAINT [CK_Log_Occurrences_JSON] CHECK (ISJSON(Occurrences) > 0)");
         }
     }
 
