@@ -365,6 +365,11 @@ body {
         height: 28px;
         width: 33px;
 
+        @media (max-width: 390px) {
+            // Otherwise menu items do not fit horizontally
+            display: none;
+        }
+
         @include media-breakpoint-up(lg) {
             height: 28px;
             width: 160px;
@@ -1702,7 +1707,7 @@ a.editable {
     top: var(--content-offset, 0px);
     background-color: var(--st-bg-color);
     border-bottom: 1px solid #fff;
-    @include border-top-radius(var(--border-radius-md));
+    @include border-top-radius(var(--border-radius-lg));
 }
 
 .stacktrace {
@@ -1710,6 +1715,7 @@ a.editable {
     color: var(--st-base-color);
     font-size: inherit;
     @include border-top-radius(0);
+    @include border-bottom-radius(var(--border-radius-lg));
 
     &:has(> .st-frame) {
         font-weight: bold;

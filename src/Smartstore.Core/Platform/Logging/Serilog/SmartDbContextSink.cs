@@ -5,6 +5,7 @@ using Serilog.Sinks.PeriodicBatching;
 using Smartstore.Core.Data;
 using Smartstore.Data;
 using Smartstore.Data.Hooks;
+using Smartstore.Utilities;
 
 namespace Smartstore.Core.Logging.Serilog;
 
@@ -19,8 +20,7 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
     // How often we purge expired entries from the in-memory map.
     private static readonly TimeSpan CleanupInterval = TimeSpan.FromMinutes(5);
 
-    private static readonly ConcurrentDictionary<string, AggregationEntry> _aggregationMap
-        = new(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<long, AggregationEntry> _aggregationMap = new();
 
     private static DateTime _lastCleanup = DateTime.MinValue;
 
@@ -48,7 +48,7 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
                 .GroupBy(ComputeFingerprint)
                 .ToList();
 
-            var toInsert = new List<(string Fingerprint, Log Log, AggregationEntry Entry)>(groups.Count);
+            var toInsert = new List<(long Fingerprint, Log Log, AggregationEntry Entry)>(groups.Count);
             var toUpdate = new List<AggregationEntry>();
 
             foreach (var group in groups)
@@ -165,12 +165,11 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
     }
 
     /// <summary>
-    /// Builds a stable string key that identifies semantically equivalent log events.
+    /// Builds a stable hash key that identifies semantically equivalent log events.
     /// Two events are considered equivalent when they share the same logger, level,
-    /// message prefix (up to 200 chars), and originating IP address.
-    /// The unit-separator character (0x1F) prevents cross-field collisions.
+    /// short message prefix (up to 200 chars), full message, and originating IP address.
     /// </summary>
-    private string ComputeFingerprint(LogEvent e)
+    private long ComputeFingerprint(LogEvent e)
     {
         var message = e.RenderMessage(_formatProvider);
         if (message?.Length > 200)
@@ -178,11 +177,14 @@ internal sealed class SmartDbContextSink : IBatchedLogEventSink
             message = message[..200];
         }
 
-        return string.Concat(
-            e.GetSourceContext() ?? string.Empty,
-            "\x1F", (int)e.Level,
-            "\x1F", message ?? string.Empty,
-            "\x1F", e.GetPropertyValue<string>("Ip") ?? string.Empty);
+        var hash = HashCodeCombiner.Start()
+            .Add(e.GetSourceContext())
+            .Add((int)e.Level)
+            .Add(message)
+            .Add(e.Exception?.ToString())
+            .Add(e.GetPropertyValue<string>("Ip"));
+
+        return hash.CombinedHashL;
     }
 
     private Log ConvertLogEvent(LogEvent e)
