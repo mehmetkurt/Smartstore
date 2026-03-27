@@ -118,7 +118,7 @@
                 <smart-label asp-for="CreatedOn" />
             </div>
             <div class="adminData">
-                <div class="form-control-plaintext hstack gap-1">
+                <div class="form-control-plaintext hstack gap-1 flex-wrap">
                     <span class="pr-1">@Html.DisplayFor(model => model.CreatedOn)</span>
                     @if (Model.Occurrences != null)
                     {
@@ -130,8 +130,8 @@
                 </div>
             </div>
         </div>
-        <div sm-if="Model.FullMessage.HasValue()" class="adminRow">
-            <div class="adminData wide">
+        <div sm-if="Model.FullMessage.HasValue()" class="adminRow wide">
+            <div class="adminData xwide">
                 <div class="stacktrace-root">
                     <div class="stacktrace-header pl-3 p-2 d-flex align-items-center" style="gap: 2px">
                         <smart-label asp-for="FullMessage" class="mb-0" />
