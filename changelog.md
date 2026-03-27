@@ -35,6 +35,10 @@
 - **CAPTCHA**
     - Improved fail-safe behavior to maintain user accessibility while blocking automated abuse
     - Fixed form submission issue in certain edge cases
+- **Event log**
+    - Log aggregation: Identical logs that occur within a 10-minute window are grouped together.
+    - Stackframe formatter
+    - Stackframe tools: copy to clipboard, wrap text
 - #1459 Cart sorting: The selected items must always come before the unselected ones.
 - Checkout: After payment confirmation on the third-party site, you will be redirected directly to the completed page if successful. The intermediate step via the confirmation page is omitted.
 - Theming: Added `.prose` helpers for readable long-form content: optimized measure (narrow/standard/wide) plus comfortable typography defaults.
