@@ -390,6 +390,17 @@ body {
 
     #navbar-menu .nav-item > .dropdown-menu {
         @include bubble("top", "near", 8, var(--dropdown-bg), var(--dropdown-border-color), 10px);
+
+        @include media-breakpoint-only(xs) {
+            &:not(.show) {
+                left: -300px;
+            }
+        }
+
+        &.overflown {
+            --bubble-offset: calc(calc(var(--menu-offset) * -1) + 10px);
+            left: var(--menu-offset, 0px) !important;
+        }
     }
 
     [data-id="nav-modules"] li:not([data-id="modules-manage"]) .dropdown-item {

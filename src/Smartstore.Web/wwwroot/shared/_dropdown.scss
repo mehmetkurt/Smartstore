@@ -136,14 +136,12 @@
 @mixin sliding-dropdown-menu() {
     opacity: 0;
     display: block;
-    left: -200px;
     visibility: hidden;
     transform: translateY(var(--y1, -16px));
     transition: transform 0.2s ease, opacity 0.275s ease-out;
     will-change: transform;
 
     &.show {
-        left: auto;
         visibility: visible;
         transform: translateY(var(--y2, 0));
         opacity: 1;
