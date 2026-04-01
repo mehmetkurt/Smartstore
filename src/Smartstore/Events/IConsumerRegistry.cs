@@ -5,5 +5,5 @@
 /// </summary>
 public interface IConsumerRegistry
 {
-    IEnumerable<ConsumerDescriptor> GetConsumers(object message);
+    ConsumerDescriptor[] GetConsumers(object message);
 }

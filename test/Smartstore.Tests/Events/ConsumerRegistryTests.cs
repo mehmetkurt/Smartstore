@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Smartstore.Events;
 
@@ -99,7 +97,7 @@ public class ConsumerRegistryTests
     public void ExactType_ReturnsSingleDescriptor()
     {
         var registry = Registry(Consumer<ExactOrderPlacedConsumer>());
-        var descriptors = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
+        var descriptors = registry.GetConsumers(new OrderPlacedEvent());
 
         Assert.That(descriptors, Has.Length.EqualTo(1));
         Assert.That(descriptors[0].MessageType, Is.EqualTo(typeof(OrderPlacedEvent)));
@@ -112,7 +110,7 @@ public class ConsumerRegistryTests
     public void DerivedType_ReturnsBaseConsumer_ViaLazyFallback()
     {
         var registry = Registry(Consumer<BaseOrderConsumer>());
-        var descriptors = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
+        var descriptors = registry.GetConsumers(new OrderPlacedEvent());
 
         Assert.That(descriptors, Has.Length.EqualTo(1));
         Assert.That(descriptors[0].MessageType, Is.EqualTo(typeof(OrderEventBase)));
@@ -124,7 +122,7 @@ public class ConsumerRegistryTests
     public void DerivedAndBaseRegistered_ReturnsBothInOrder_ViaFastPath()
     {
         var registry = Registry(Consumer<ExactOrderPlacedConsumer>(), Consumer<BaseOrderConsumer>());
-        var descriptors = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
+        var descriptors = registry.GetConsumers(new OrderPlacedEvent());
 
         Assert.That(descriptors, Has.Length.EqualTo(2));
         Assert.That(descriptors[0].MessageType, Is.EqualTo(typeof(OrderPlacedEvent)));
@@ -137,7 +135,7 @@ public class ConsumerRegistryTests
     public void DerivedType_ReturnsInterfaceConsumer_ViaLazyFallback()
     {
         var registry = Registry(Consumer<InterfaceOrderConsumer>());
-        var descriptors = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
+        var descriptors = registry.GetConsumers(new OrderPlacedEvent());
 
         Assert.That(descriptors, Has.Length.EqualTo(1));
         Assert.That(descriptors[0].MessageType, Is.EqualTo(typeof(IOrderEvent)));
@@ -149,7 +147,7 @@ public class ConsumerRegistryTests
     public void AllLevels_ReturnsDescriptorsInHierarchyOrder()
     {
         var registry = Registry(Consumer<AllLevelsConsumer>());
-        var descriptors = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
+        var descriptors = registry.GetConsumers(new OrderPlacedEvent());
 
         // concrete → base class → interface
         Assert.That(descriptors, Has.Length.EqualTo(3));
@@ -165,8 +163,8 @@ public class ConsumerRegistryTests
     {
         var registry = Registry(Consumer<BaseOrderConsumer>());
 
-        var placed = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
-        var shipped = registry.GetConsumers(new OrderShippedEvent()).ToArray();
+        var placed = registry.GetConsumers(new OrderPlacedEvent());
+        var shipped = registry.GetConsumers(new OrderShippedEvent());
 
         Assert.That(placed, Has.Length.EqualTo(1));
         Assert.That(shipped, Has.Length.EqualTo(1));
@@ -204,7 +202,7 @@ public class ConsumerRegistryTests
     public void ConsumeContextEnvelope_SetsWithEnvelopeAndExtractsMessageType()
     {
         var registry = Registry(Consumer<EnvelopeConsumeContextConsumer>());
-        var descriptors = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
+        var descriptors = registry.GetConsumers(new OrderPlacedEvent());
 
         Assert.That(descriptors, Has.Length.EqualTo(1));
         Assert.That(descriptors[0].WithEnvelope, Is.True);
@@ -219,7 +217,7 @@ public class ConsumerRegistryTests
         // Consumer declared for IConsumeContext<OrderEventBase>; publish OrderPlacedEvent
         // → covariant: ConsumeContext<OrderPlacedEvent> satisfies IConsumeContext<OrderEventBase>
         var registry = Registry(Consumer<EnvelopeIConsumeContextConsumer>());
-        var descriptors = registry.GetConsumers(new OrderPlacedEvent()).ToArray();
+        var descriptors = registry.GetConsumers(new OrderPlacedEvent());
 
         Assert.That(descriptors, Has.Length.EqualTo(1));
         Assert.That(descriptors[0].WithEnvelope, Is.True);

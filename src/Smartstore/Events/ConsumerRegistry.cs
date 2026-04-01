@@ -207,7 +207,7 @@ public class ConsumerRegistry : IConsumerRegistry
             ?.GetCustomAttribute<CompilerGeneratedAttribute>() != null;
     }
 
-    public virtual IEnumerable<ConsumerDescriptor> GetConsumers(object message)
+    public virtual ConsumerDescriptor[] GetConsumers(object message)
     {
         Guard.NotNull(message);
 
