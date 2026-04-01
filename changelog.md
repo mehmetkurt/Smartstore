@@ -78,6 +78,7 @@
   - Get cart by using the current store ID explicitly.
   - The checkboxes for overriding multistore settings were missing.
 - Take the customer's preferred shipping method into account when updating the shopping cart.
+- Fixed "The value '' is invalid" for category export filter.
 
 
 ## Smartstore 6.3.0
