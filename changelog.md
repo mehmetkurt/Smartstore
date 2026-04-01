@@ -30,6 +30,7 @@
 
 ### Improvements
 
+- (DEV) **Event system**: Consumer methods can now be declared for a **base class or interface** instead of the exact published type.
 - Moved AI command tools from Media Manager toolbar to folder dropwdown menu.
 - Enhanced bot and AI agent detection with heuristic checks further reduces DB junk.
 - **CAPTCHA**
